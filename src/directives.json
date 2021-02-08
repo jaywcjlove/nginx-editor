@@ -1,0 +1,17 @@
+[
+  {
+    "name": "include",
+    "module": "Core functionality",
+    "md": "Includes another file, or files matching thespecified mask, into configuration.Included files should consist ofsyntactically correct directives and blocks."
+  },
+  {
+    "name": "server",
+    "module": "ngx_http_core_module",
+    "md": "Sets configuration for a virtual server. There is no clear separation between IP-based (based on the IP address) and name-based (based on the &#x201C;Host&#x201D; request header field) virtual servers. Instead, the [listen](https://nginx.org/en/docs/http/ngx_http_core_module.html#listen) directives describe all addresses and ports that should accept connections for the server, and the [server_name](https://nginx.org/en/docs/http/ngx_http_core_module.html#server_name) directive lists all server names. Example configurations are provided in the &#x201C;<a href=\"https://nginx.org/en/docs/http/request_processing.html\">How nginx processes a request</a>&#x201D; document."
+  },
+  {
+    "name": "listen",
+    "module": "ngx_mail_core_module",
+    "md": "Default: listen *:80 | *:8000;\n Context: server\nSets the `address` and `port` for IP, or the `path` for a UNIX-domain socket on which the server will accept requests. Both `address` and `port`, or only `address` or only `port` can be specified. An `address` may also be a hostname, for example:\n```bash\n listen 127.0.0.1:8000;\n listen 127.0.0.1;\n listen 8000;\n listen *:8000;\n listen localhost:8000;\n ```\nIPv6 addresses (0.7.36) are specified in square brackets:\n \n ```\n listen [::]:8000;\n listen [::1];\n ```\n \n UNIX-domain sockets (0.8.21) are specified with the “unix:” prefix:\n \n ```\n listen unix:/var/run/nginx.sock;\n ```\n \n If only `address` is given, the port `80` is used.\n \n If the directive is not present then either `*:80` is used if nginx runs with the superuser privileges, or `*:8000` otherwise.\n"
+  }
+]

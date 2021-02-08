@@ -1,0 +1,42 @@
+import * as monaco from 'monaco-editor';
+
+export default function suggestions(range: monaco.IRange): monaco.languages.CompletionList['suggestions'] {
+  return [
+    {
+      label: 'upstream',
+      kind: monaco.languages.CompletionItemKind.Snippet,
+      insertText: [
+        // eslint-disable-next-line
+        'upstream ${1:upstream_name} {',
+        // eslint-disable-next-line
+        '\tserver ${0:127.0.0.1:3110};',
+        '}'
+      ].join('\n'),
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+      detail: 'Upstream Example',
+      range
+    },
+    {
+      label: 'proxy_pass',
+      kind: monaco.languages.CompletionItemKind.Snippet,
+      insertText: [
+        // eslint-disable-next-line
+        'proxy_pass    ${1:http}://${0192.168.188.222:32001};',
+      ].join('\n'),
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+      detail: 'proxy_pass Example',
+      range
+    },
+    {
+      label: 'location',
+      kind: monaco.languages.CompletionItemKind.Snippet,
+      insertText: [
+        // eslint-disable-next-line
+        'location ${1:/} {\n\t${0}\n}',
+      ].join('\n'),
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+      detail: 'proxy_pass Example',
+      range
+    },
+  ]
+};

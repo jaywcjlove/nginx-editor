@@ -33,7 +33,8 @@ monaco.languages.registerHoverProvider('nginx', {
 	provideHover:  (model: monaco.editor.ITextModel, position: monaco.Position, token: monaco.CancellationToken) => {
 		const word = model.getWordAtPosition(position);
 		if (!word) return;
-		const data = directives.find(item => item.name === word.word);
+		const data = directives.find(item => item.n === word.word || item.n === `$${word.word}`);
+		console.log('data:', data)
 		if (!data) return;
 		const range = {
 				startLineNumber: position.lineNumber,
@@ -41,11 +42,10 @@ monaco.languages.registerHoverProvider('nginx', {
 				startColumn: word.startColumn,
 				endColumn: word.endColumn
 		};
-		console.log('data:', data)
 		return {
 			contents: [
-				{ value: `**\`${data.name}\`** ${data.module}` },
-				{ value: `${data.md}` },
+				{ value: `**\`${data.n}\`** ${data.m}` },
+				{ value: `${data.d}` },
 			],
 			range: range,
 		}

@@ -1,7 +1,21 @@
 import * as monaco from 'monaco-editor';
+import directives from './directives.json';
+
+function getDirectives(range: monaco.IRange) {
+  return directives.map((item) => (
+    {
+      label: item.n,
+      kind: monaco.languages.CompletionItemKind.Keyword,
+      insertText: item.n,
+      documentation: item.d,
+      range,
+    }
+  ))
+}
 
 export default function suggestions(range: monaco.IRange): monaco.languages.CompletionList['suggestions'] {
   return [
+    ...getDirectives(range),
     {
       label: 'upstream',
       kind: monaco.languages.CompletionItemKind.Snippet,

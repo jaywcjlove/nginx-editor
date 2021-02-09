@@ -29,7 +29,7 @@ http {
     access_log   logs/domain1.access.log  main;
     root         html;
 
-    location ~ \.php$ {
+    location ~ \\.php$ {
       fastcgi_pass   127.0.0.1:1025;
     }
   }

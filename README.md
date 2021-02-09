@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://uiwjs.github.io/npm-unpkg/#/pkg/monaco-editor-nginx/file/README.md">
+  <a href="https://jaywcjlove.github.io/nginx-editor">
     <img alt="nginx-editor logo" src="https://user-images.githubusercontent.com/1680273/107325503-cb402b00-6ae4-11eb-8b43-f6dcee7bf783.png">
   </a>
 </p>
@@ -34,6 +34,8 @@ Nginx language plugin for the [Monaco Editor](https://github.com/microsoft/monac
 ```bash
 npm install monaco-editor-nginx
 ```
+
+[![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox)](https://codesandbox.io/s/github/jaywcjlove/nginx-editor/tree/master)
 
 ```jsx
 import MonacoEditor from '@uiw/react-monacoeditor';

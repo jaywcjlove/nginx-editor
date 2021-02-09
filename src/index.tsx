@@ -41,11 +41,18 @@ monaco.languages.registerHoverProvider('nginx', {
 				startColumn: word.startColumn,
 				endColumn: word.endColumn
 		};
+		const contents = [{ value: `**\`${data.n}\`** | ${data.m} | ${data.c || ''}` }];
+		if (data.s) {
+			contents.push({ value: `**syntax:** ${data.s || ''}` })
+		}
+		if (data.v) {
+			contents.push({ value: `**default:** ${data.v || ''}` })
+		}
+		if (data.d) {
+			contents.push({ value: `${data.d}` });
+		}
 		return {
-			contents: [
-				{ value: `**\`${data.n}\`** ${data.m}` },
-				{ value: `${data.d}` },
-			],
+			contents: [...contents],
 			range: range,
 		}
 	}

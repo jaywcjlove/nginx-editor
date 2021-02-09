@@ -1,10 +1,25 @@
 import fetch from 'node-fetch';
 import cheerio from 'cheerio';
-import { Node, Element } from 'domhandler';
+import { Element } from 'domhandler';
 import fs from 'fs';
 import path from 'path';
 import TurndownService from 'turndown';
 
+type ResultDataItem = Omit<DataItem, 'd'> & { d: string; };
+type DataItem = {
+  /** directive name */
+  n: string;
+  /** module name */
+  m: string;
+  /** directive detail */
+  d: string[];
+  /** default value */
+  v?: string;
+  /** context */
+  c?: string;
+  /** syntax */
+  s?: string;
+}
 
 const turndownService = new TurndownService({
   // codeBlockStyle: 'fenced'
@@ -37,7 +52,7 @@ function nextSibling(child: Element, opt: { tagName: string; class?: string; }) 
 }
 
 async function getData(url: string) {
-  console.log(`\x1b[1;35m Request URL:\x1b[0m =>\x1b[1;32m ${url} \x1b[0m`);
+  console.log(`\x1b[1;35m Request URL:\x1b[0m =>\x1b[34m ${url} \x1b[0m`);
   try {
     const data = await request(url);
     if (data) {
@@ -52,24 +67,31 @@ async function getData(url: string) {
       }
       let variablesElm: Element = undefined;
       childs.map((idx, child) => {
-        if (child.attribs.class === 'directive') return;
         if (child.attribs.name && child.tagName === 'a') {
-          if (resultItem.n !== 'variables') {
-            result.push({ ...resultItem });
-          }
-          resultItem.n = $(child)[0].attribs.name;
+          result.push({ ...resultItem });
+          resultItem.n = child.attribs.name;
           resultItem.d = [];
           if (child.attribs.name === 'variables') {
             variablesElm = nextSibling(child, { tagName: 'dl', class: 'compact' });
           }
         }
+        if (child.attribs.class === 'directive') {
+          const tr = $(child).find('table tr');
+          resultItem.s = turndownService.turndown($('td', tr[0]).html());
+          resultItem.v = turndownService.turndown($('td', tr[1]).html());
+          resultItem.c = turndownService.turndown($('td', tr[2]).html());
+        }
         const text = $(child).html();
         if (text && text !== '') {
+          if (/directive/.test(child.attribs.class)) return;
           if (child.attribs.class === 'example') {
             resultItem.d.push(`\`\`\`\n${$(child).text() || ''}\n\`\`\``);
           } else {
             resultItem.d.push(turndownService.turndown(text || ''));
           }
+        }
+        if (idx + 1 === childs.length) {
+          result.push({ ...resultItem });
         }
       });
       $(variablesElm).children().map((idx, child) => {
@@ -81,9 +103,21 @@ async function getData(url: string) {
           });
         }
       });
-      const directivesData: ResultDataItem[] = result.map(item => ({ ...item, d: item.d.join('\n') })).filter(m => m.n && !/^(directives|example)/.test(m.n));
-      console.log(`\x1b[1;35m  -> Data Length:\x1b[0m\x1b[1;32m ${directivesData.length} \x1b[0m`);
-      console.log(`\x1b[1;35m  -> Find Variables Node:\x1b[0m\x1b[1;34m ${variablesElm ? $(variablesElm).length : 0} \x1b[0m`);
+      const directivesData: ResultDataItem[] = result.map(item => {
+        const data: ResultDataItem = { m: item.m, n: item.n, d: item.d.join('\n') };
+        if (item.v && item.v.replace(/^—+/g, '')) {
+          data.v = item.v.replace(/^—+/g, '');
+        }
+        if (item.c) {
+          data.c = item.c;
+        }
+        if (item.s && item.s.replace(/(^`+)|(`+$)/g, '')) {
+          data.s = item.s.replace(/(^`+)|(`+$)/g, '');
+        }
+        return { ...data  }
+      }).filter(m => m.n && !/^(directives|example|summary)/.test(m.n));
+      console.log(`\x1b[35m  ->\x1b[0m Data Length:\x1b[32m ${directivesData.length} \x1b[0m`);
+      console.log(`\x1b[35m  ->\x1b[0m Find Variables Node:\x1b[36m ${variablesElm ? $(variablesElm).length : 0} \x1b[0m`);
       return directivesData;
     }
     return [];
@@ -92,14 +126,12 @@ async function getData(url: string) {
     process.exit()
   }
 }
-type ResultDataItem = Omit<DataItem, 'd'> & { d: string; };
-type DataItem = {
-  n: string; m: string; d: string[]
-}
 
 ;(async () => {
   let resultData: ResultDataItem[] = [];
+
   const core = await getData('https://nginx.org/en/docs/ngx_core_module.html');
+
   const http_core = await getData('https://nginx.org/en/docs/http/ngx_http_core_module.html');
   const http_access = await getData('https://nginx.org/en/docs/http/ngx_http_access_module.html');
   const http_addition = await getData('https://nginx.org/en/docs/http/ngx_http_addition_module.html');
@@ -191,6 +223,6 @@ type DataItem = {
 
   resultData = resultData.concat(core, http_core, http_access, http_addition, http_api, http_auth_basic, http_auth_jwt, http_auth_request, http_autoindex, http_browser, http_charset, http_dav, http_empty_gif, http_f4f, http_fastcgi, http_flv, http_geo, http_geoip, http_grpc, http_gunzip, http_gzip, http_gzip_static, http_headers, http_hls, http_image_filter, http_index, http_js, http_keyval, http_limit_conn, http_limit_req, http_log, http_map, http_memcached, http_mirror, http_mp4, http_perl, http_proxy, http_random_index, http_realip, http_referer, http_rewrite, http_scgi, http_secure_link, http_session_log, http_slice, http_spdy, http_split_clients, http_ssi, http_ssl, http_status, http_stub_status, http_sub, http_upstream, http_upstream_conf, http_upstream_hc, http_userid, http_uwsgi, http_v2, http_xslt, mail_core, mail_auth_http, mail_proxy, mail_ssl, mail_imap, mail_pop3, mail_smtp, stream_core, stream_access, stream_geo, stream_geoip, stream_js, stream_keyval, stream_limit_conn, stream_log, stream_map, stream_proxy, stream_realip, stream_return, stream_set, stream_split_clients, stream_ssl, stream_ssl_preread, stream_upstream, stream_upstream_hc, stream_zone_sync, google_perftools)
   await fs.promises.writeFile(path.resolve(process.cwd(), 'src/directives.json'), JSON.stringify(resultData, null, 2));
-  console.log(`\x1b[1;35m Done:\x1b[0m\x1b[1;32m ${path.resolve(process.cwd(), 'src/directives.json')} \x1b[0m`);
-  console.log(`\x1b[1;35m  -> DataSource Length:\x1b[0m\x1b[1;32m ${resultData.length} \x1b[0m`);
+  console.log(`\x1b[1;35m Done:\x1b[0m\x1b[32m ${path.resolve(process.cwd(), 'src/directives.json')} \x1b[0m`);
+  console.log(`\x1b[1;35m  -> DataSource Length:\x1b[0m\x1b[32m ${resultData.length} \x1b[0m`);
 })();

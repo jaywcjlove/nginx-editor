@@ -1,6 +1,9 @@
 monaco-editor-nginx
 ===
 
+![Build & Deploy](https://github.com/jaywcjlove/nginx-editor/workflows/Build%20&%20Deploy/badge.svg)
+[![npm version](https://img.shields.io/npm/v/nginx-editor.svg)](https://www.npmjs.com/package/jaywcjlove/nginx-editor)
+
 Nginx language plugin for the [Monaco Editor](https://github.com/microsoft/monaco-editor). It provides the following features when editing [Nginx](https://nginx.org/) config files:
 
 - Syntax highlighting
@@ -26,7 +29,7 @@ import 'monaco-editor-nginx';
 />
 ```
 
-**development**
+## Development
 
 Runs the project in development mode.  
 
@@ -37,8 +40,6 @@ npm run watch
 # Step 2, development mode, listen to compile preview website instance
 npm run start
 ```
-
-**production**
 
 Builds the app for production to the build folder.
 

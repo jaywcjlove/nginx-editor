@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import MonacoEditor from '@uiw/react-monacoeditor';
 import { nginxStr } from './nginx.conf';
 import Header from './Header';
@@ -6,6 +6,7 @@ import './App.css';
 import '../';
 
 const App: React.FC = () => {
+  const [content, setContent] = useState(nginxStr || '');
   const editor = React.useRef<MonacoEditor>();
   function resizeHandle(evn: UIEvent) {
     const { target } = evn;
@@ -25,7 +26,9 @@ const App: React.FC = () => {
   }, []);
   return (
     <div className="App">
-      <Header />
+      <Header onLoadContent={(text) => {
+        setContent(text)
+      }}/>
       <MonacoEditor
         ref={(instance) => {
           if (instance) {
@@ -34,7 +37,7 @@ const App: React.FC = () => {
         }}
         theme="nginx-theme"
         language="nginx"
-        value={nginxStr}
+        value={content}
         height="calc(100vh - 36px)"
         options={{
           theme: 'vs-dark',

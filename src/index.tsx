@@ -34,7 +34,6 @@ monaco.languages.registerHoverProvider('nginx', {
 		const word = model.getWordAtPosition(position);
 		if (!word) return;
 		const data = directives.find(item => item.n === word.word || item.n === `$${word.word}`);
-		console.log('data:', data)
 		if (!data) return;
 		const range = {
 				startLineNumber: position.lineNumber,

@@ -1,6 +1,6 @@
 {
   "name": "monaco-editor-nginx",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Nginx language for Monaco Editor.",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
@@ -49,9 +49,15 @@
     "src",
     "lib"
   ],
-  "dependencies": {
-    "prop-types": "15.7.2"
-  },
+  "keywords": [
+    "monaco-editor",
+    "monaco-nginx",
+    "nginx",
+    "monaco",
+    "editor",
+    "editor-nginx",
+    "monaco-editor-nginx"
+  ],
   "devDependencies": {
     "@kkt/less-modules": "6.6.2",
     "@kkt/raw-modules": "6.6.2",

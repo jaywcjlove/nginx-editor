@@ -1,8 +1,29 @@
-monaco-editor-nginx
-===
+<p align="center">
+  <a href="https://uiwjs.github.io/npm-unpkg/#/pkg/monaco-editor-nginx/file/README.md">
+    <img alt="nginx-editor logo" src="https://user-images.githubusercontent.com/1680273/107325503-cb402b00-6ae4-11eb-8b43-f6dcee7bf783.png">
+  </a>
+</p>
 
-![Build & Deploy](https://github.com/jaywcjlove/nginx-editor/workflows/Build%20&%20Deploy/badge.svg)
-[![npm version](https://img.shields.io/npm/v/nginx-editor.svg)](https://www.npmjs.com/package/jaywcjlove/nginx-editor)
+<p align="center">
+  <a href="https://github.com/jaywcjlove/nginx-editor/actions">
+    <img alt="Build & Deploy" src="https://github.com/jaywcjlove/nginx-editor/workflows/Build%20&%20Deploy/badge.svg">
+  </a>
+  <a href="https://github.com/jaywcjlove/nginx-editor/issues">
+    <img alt="Issues" src="https://img.shields.io/github/issues/jaywcjlove/nginx-editor.svg">
+  </a>
+  <a href="https://github.com/jaywcjlove/nginx-editor/network">
+    <img alt="Forks" src="https://img.shields.io/github/forks/jaywcjlove/nginx-editor.svg">
+  </a>
+  <a href="https://github.com/jaywcjlove/nginx-editor/stargazers">
+    <img alt="Stars" src="https://img.shields.io/github/stars/jaywcjlove/nginx-editor.svg">
+  </a>
+  <a href="https://uiwjs.github.io/npm-unpkg/#/pkg/monaco-editor-nginx/file/README.md">
+    <img src="https://img.shields.io/badge/Open%20in-unpkg-blue" alt="Open in unpkg">
+  </a>
+  <a href="https://www.npmjs.com/package/monaco-editor-nginx">
+    <img alt="npm version" src="https://img.shields.io/npm/v/monaco-editor-nginx.svg">
+  </a>
+</p>
 
 Nginx language plugin for the [Monaco Editor](https://github.com/microsoft/monaco-editor). It provides the following features when editing [Nginx](https://nginx.org/) config files:
 

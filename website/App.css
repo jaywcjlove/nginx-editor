@@ -8,6 +8,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+html, body {
+  background-color: #1e1e1e;
+}
+
 .App {
-  min-height: 100vh;
+  overflow: hidden;
 }

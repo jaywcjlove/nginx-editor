@@ -35,7 +35,8 @@ Nginx language plugin for the [Monaco Editor](https://github.com/microsoft/monac
 npm install monaco-editor-nginx
 ```
 
-[![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox)](https://codesandbox.io/s/github/jaywcjlove/nginx-editor/tree/master)
+[![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox)](https://codesandbox.io/s/github/jaywcjlove/nginx-editor)
+[![Open in Github gh-pages](https://img.shields.io/badge/Open%20In-Github%20gh--pages-blue?logo=github)](https://jaywcjlove.github.io/nginx-editor/)
 
 ```jsx
 import MonacoEditor from '@uiw/react-monacoeditor';

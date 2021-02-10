@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://jaywcjlove.github.io/nginx-editor">
-    <img alt="nginx-editor" src="https://user-images.githubusercontent.com/1680273/107411705-d1b4be00-6b49-11eb-8fa0-8a1890172ad0.png">
+    <img alt="nginx-editor" src="https://user-images.githubusercontent.com/1680273/107486617-37dc2800-6bc0-11eb-94ba-f715da69bbda.png">
   </a>
 </p>
 

@@ -5,8 +5,8 @@
     "static/js/1.a322cd96.chunk.js": "/nginx-editor/static/js/1.a322cd96.chunk.js",
     "static/js/1.a322cd96.chunk.js.map": "/nginx-editor/static/js/1.a322cd96.chunk.js.map",
     "main.css": "/nginx-editor/static/css/main.a4a3fbcf.chunk.css",
-    "main.js": "/nginx-editor/static/js/main.a71b0cae.chunk.js",
-    "main.js.map": "/nginx-editor/static/js/main.a71b0cae.chunk.js.map",
+    "main.js": "/nginx-editor/static/js/main.963c32cd.chunk.js",
+    "main.js.map": "/nginx-editor/static/js/main.963c32cd.chunk.js.map",
     "runtime-main.js": "/nginx-editor/static/js/runtime-main.ed99e2ae.js",
     "runtime-main.js.map": "/nginx-editor/static/js/runtime-main.ed99e2ae.js.map",
     "static/css/4.6118eed3.chunk.css": "/nginx-editor/static/css/4.6118eed3.chunk.css",
@@ -166,6 +166,6 @@
     "static/css/4.6118eed3.chunk.css",
     "static/js/4.98888c5a.chunk.js",
     "static/css/main.a4a3fbcf.chunk.css",
-    "static/js/main.a71b0cae.chunk.js"
+    "static/js/main.963c32cd.chunk.js"
   ]
 }

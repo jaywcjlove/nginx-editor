@@ -114,6 +114,7 @@ async function getData(url: string) {
         if (item.s && item.s.replace(/(^`+)|(`+$)/g, '')) {
           data.s = item.s.replace(/(^`+)|(`+$)/g, '');
         }
+        data.d = data.d.replace(/\[(.[^\]]+)\]\((.[^)]+)\)/g, `[$1](${url}$2)`)
         return { ...data  }
       }).filter(m => m.n && !/^(directives|example|summary)/.test(m.n));
       console.log(`\x1b[35m  ->\x1b[0m Data Length:\x1b[32m ${directivesData.length} \x1b[0m`);

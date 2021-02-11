@@ -117,8 +117,7 @@ async function getData(url: string) {
         data.d = data.d.replace(/\[(.[^\]]+)\]\((.[^)]+)\)/g, (str, $1, $2) => {
           if (/^#/.test($2)) {
             return `[${$1}](${url}${$2})`;
-          }
-          if (/^\./.test($2)) {
+          } else if (/^\./.test($2) || !/^http(s)?:/.test($2)) {
             return `[${$1}](https:/${path.resolve(path.dirname(url.replace(/^https:\//, '')), $2)})`;
           }
           return str;

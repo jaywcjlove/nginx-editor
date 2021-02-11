@@ -114,7 +114,15 @@ async function getData(url: string) {
         if (item.s && item.s.replace(/(^`+)|(`+$)/g, '')) {
           data.s = item.s.replace(/(^`+)|(`+$)/g, '');
         }
-        data.d = data.d.replace(/\[(.[^\]]+)\]\((.[^)]+)\)/g, `[$1](${url}$2)`)
+        data.d = data.d.replace(/\[(.[^\]]+)\]\((.[^)]+)\)/g, (str, $1, $2) => {
+          if (/^#/.test($2)) {
+            return `[${$1}](${url}${$2})`;
+          }
+          if (/^\./.test($2)) {
+            return `[${$1}](https:/${path.resolve(path.dirname(url.replace(/^https:\//, '')), $2)})`;
+          }
+          return str;
+        });
         return { ...data  }
       }).filter(m => m.n && !/^(directives|example|summary)/.test(m.n));
       console.log(`\x1b[35m  ->\x1b[0m Data Length:\x1b[32m ${directivesData.length} \x1b[0m`);

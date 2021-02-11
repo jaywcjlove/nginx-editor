@@ -1,6 +1,6 @@
 import styles from 'Header.module.less';
 import { useState } from 'react';
-import LoadFile from './LoadFile';
+import LoadFile, { LoadFileProps } from './LoadFile';
 
 const Logo = () => (
   <svg viewBox="0 0 1024 1024" width="18" height="18">
@@ -14,9 +14,7 @@ const GitHub = () => (
   </svg>
 )
 
-type HeaderProps = {
-  onLoadContent?: (text: string, evn: ProgressEvent<FileReader>, file?: File) => void;
-}
+type HeaderProps = LoadFileProps & {};
 
 export default function Header(props: HeaderProps) {
   const { onLoadContent } = props;
@@ -28,11 +26,15 @@ export default function Header(props: HeaderProps) {
         nginx editor
       </div>
       <div className={styles.filename}>{filename}</div>
-      <LoadFile onLoadContent={(text, evn, file) => {
-        setFilename(file!.name || '')
-        onLoadContent && onLoadContent(text, evn);
-      }} />
-      <a href="https://github.com/jaywcjlove/nginx-editor" target="__blank">
+      <LoadFile
+        content={props.content}
+        filename={filename}
+        onLoadContent={(text, evn, file) => {
+          setFilename(file!.name || '')
+          onLoadContent && onLoadContent(text, evn);
+        }}
+      />
+      <a href="https://github.com/jaywcjlove/nginx-editor" target="__blank" style={{ marginLeft: 6 }}>
         <GitHub />
       </a>
     </div>

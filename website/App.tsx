@@ -26,7 +26,7 @@ const App: React.FC = () => {
   }, []);
   return (
     <div className="App">
-      <Header onLoadContent={(text) => {
+      <Header content={content} onLoadContent={(text) => {
         setContent(text)
       }}/>
       <MonacoEditor
@@ -34,6 +34,9 @@ const App: React.FC = () => {
           if (instance) {
             editor.current = instance;
           }
+        }}
+        onChange={(value) => {
+          setContent(value);
         }}
         theme="nginx-theme"
         language="nginx"

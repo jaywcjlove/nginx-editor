@@ -61,7 +61,7 @@
   "devDependencies": {
     "@kkt/less-modules": "6.6.2",
     "@kkt/raw-modules": "6.6.3",
-    "@kkt/scope-plugin-options": "6.6.2",
+    "@kkt/scope-plugin-options": "6.6.3",
     "@uiw/react-monacoeditor": "3.0.0",
     "@types/turndown": "5.0.0",
     "@types/react": "17.0.1",

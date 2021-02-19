@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import MonacoEditor from '@uiw/react-monacoeditor';
+import React, { useEffect, useRef, useState } from 'react';
+import MonacoEditor, { RefEditorInstance } from '@uiw/react-monacoeditor';
 import { nginxStr } from './nginx.conf';
 import Header from './Header';
 import './App.css';
@@ -7,7 +7,7 @@ import '../';
 
 const App: React.FC = () => {
   const [content, setContent] = useState(nginxStr || '');
-  const editor = React.useRef<MonacoEditor>();
+  const editor = useRef<RefEditorInstance>(null)
   function resizeHandle(evn: UIEvent) {
     const { target } = evn;
     const width = (target as Window).innerWidth;
@@ -17,7 +17,7 @@ const App: React.FC = () => {
     }
   }
   useEffect(() => {
-    if (editor.current && editor.current.editor && window) {
+    if (editor.current && window) {
       window.addEventListener('resize', resizeHandle, false);
     }
     return () => {
@@ -30,11 +30,7 @@ const App: React.FC = () => {
         setContent(text)
       }}/>
       <MonacoEditor
-        ref={(instance) => {
-          if (instance) {
-            editor.current = instance;
-          }
-        }}
+        ref={editor}
         onChange={(value) => {
           setContent(value);
         }}

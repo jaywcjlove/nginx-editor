@@ -5,13 +5,13 @@
     "static/js/1.4f81b73d.chunk.js": "/nginx-editor/static/js/1.4f81b73d.chunk.js",
     "static/js/1.4f81b73d.chunk.js.map": "/nginx-editor/static/js/1.4f81b73d.chunk.js.map",
     "main.css": "/nginx-editor/static/css/main.6efc3872.chunk.css",
-    "main.js": "/nginx-editor/static/js/main.d99446f8.chunk.js",
-    "main.js.map": "/nginx-editor/static/js/main.d99446f8.chunk.js.map",
+    "main.js": "/nginx-editor/static/js/main.ab0ba194.chunk.js",
+    "main.js.map": "/nginx-editor/static/js/main.ab0ba194.chunk.js.map",
     "runtime-main.js": "/nginx-editor/static/js/runtime-main.2a2cb294.js",
     "runtime-main.js.map": "/nginx-editor/static/js/runtime-main.2a2cb294.js.map",
     "static/css/4.3073f32d.chunk.css": "/nginx-editor/static/css/4.3073f32d.chunk.css",
-    "static/js/4.b3e1ed23.chunk.js": "/nginx-editor/static/js/4.b3e1ed23.chunk.js",
-    "static/js/4.b3e1ed23.chunk.js.map": "/nginx-editor/static/js/4.b3e1ed23.chunk.js.map",
+    "static/js/4.d3c79ee6.chunk.js": "/nginx-editor/static/js/4.d3c79ee6.chunk.js",
+    "static/js/4.d3c79ee6.chunk.js.map": "/nginx-editor/static/js/4.d3c79ee6.chunk.js.map",
     "static/js/5.dc622ffb.chunk.js": "/nginx-editor/static/js/5.dc622ffb.chunk.js",
     "static/js/5.dc622ffb.chunk.js.map": "/nginx-editor/static/js/5.dc622ffb.chunk.js.map",
     "static/js/6.c57ac514.chunk.js": "/nginx-editor/static/js/6.c57ac514.chunk.js",
@@ -157,15 +157,15 @@
     "index.html": "/nginx-editor/index.html",
     "static/css/4.3073f32d.chunk.css.map": "/nginx-editor/static/css/4.3073f32d.chunk.css.map",
     "static/css/main.6efc3872.chunk.css.map": "/nginx-editor/static/css/main.6efc3872.chunk.css.map",
-    "static/js/4.b3e1ed23.chunk.js.LICENSE.txt": "/nginx-editor/static/js/4.b3e1ed23.chunk.js.LICENSE.txt",
+    "static/js/4.d3c79ee6.chunk.js.LICENSE.txt": "/nginx-editor/static/js/4.d3c79ee6.chunk.js.LICENSE.txt",
     "static/js/67.7a82b8c8.chunk.js.LICENSE.txt": "/nginx-editor/static/js/67.7a82b8c8.chunk.js.LICENSE.txt",
     "static/media/codicon.css": "/nginx-editor/static/media/codicon.4168b9c1.ttf"
   },
   "entrypoints": [
     "static/js/runtime-main.2a2cb294.js",
     "static/css/4.3073f32d.chunk.css",
-    "static/js/4.b3e1ed23.chunk.js",
+    "static/js/4.d3c79ee6.chunk.js",
     "static/css/main.6efc3872.chunk.css",
-    "static/js/main.d99446f8.chunk.js"
+    "static/js/main.ab0ba194.chunk.js"
   ]
 }

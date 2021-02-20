@@ -67,4 +67,4 @@ http {
       proxy_pass      http://big_server_com;
     }
   }
-}`
+}`;

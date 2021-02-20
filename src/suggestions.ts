@@ -2,15 +2,13 @@ import * as monaco from 'monaco-editor';
 import directives from './directives.json';
 
 function getDirectives(range: monaco.IRange) {
-  return directives.map((item) => (
-    {
-      label: item.n,
-      kind: monaco.languages.CompletionItemKind.Keyword,
-      insertText: item.n,
-      documentation: item.d,
-      range,
-    }
-  ))
+  return directives.map((item) => ({
+    label: item.n,
+    kind: monaco.languages.CompletionItemKind.Keyword,
+    insertText: item.n,
+    documentation: item.d,
+    range,
+  }));
 }
 
 export default function suggestions(range: monaco.IRange): monaco.languages.CompletionList['suggestions'] {
@@ -24,11 +22,11 @@ export default function suggestions(range: monaco.IRange): monaco.languages.Comp
         'upstream ${1:upstream_name} {',
         // eslint-disable-next-line
         '\tserver ${0:127.0.0.1:3110};',
-        '}'
+        '}',
       ].join('\n'),
       insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       detail: 'Upstream Example',
-      range
+      range,
     },
     {
       label: 'proxy_pass',
@@ -39,7 +37,7 @@ export default function suggestions(range: monaco.IRange): monaco.languages.Comp
       ].join('\n'),
       insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       detail: 'proxy_pass Example',
-      range
+      range,
     },
     {
       label: 'location',
@@ -50,7 +48,7 @@ export default function suggestions(range: monaco.IRange): monaco.languages.Comp
       ].join('\n'),
       insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       detail: 'proxy_pass Example',
-      range
+      range,
     },
-  ]
-};
+  ];
+}

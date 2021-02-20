@@ -23,7 +23,7 @@ export default (conf: WebpackConfiguration, env: 'production' | 'development', o
   conf.plugins!.push(
     new MonacoWebpackPlugin({
       languages: [],
-    })
+    }),
   );
   if (env === 'production') {
     conf.output = { ...conf.output, publicPath: './' };

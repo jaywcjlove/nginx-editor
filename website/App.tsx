@@ -7,13 +7,13 @@ import '../';
 
 const App: React.FC = () => {
   const [content, setContent] = useState(nginxStr || '');
-  const editor = useRef<RefEditorInstance>(null)
+  const editor = useRef<RefEditorInstance>(null);
   function resizeHandle(evn: UIEvent) {
     const { target } = evn;
     const width = (target as Window).innerWidth;
     const height = (target as Window).innerHeight;
     if (editor.current && editor.current.editor) {
-      editor.current.editor.layout({ width, height: height - 36 })
+      editor.current.editor.layout({ width, height: height - 36 });
     }
   }
   useEffect(() => {
@@ -22,13 +22,16 @@ const App: React.FC = () => {
     }
     return () => {
       window && window.removeEventListener('resize', resizeHandle, false);
-    }
+    };
   }, []);
   return (
     <div className="App">
-      <Header content={content} onLoadContent={(text) => {
-        setContent(text)
-      }}/>
+      <Header
+        content={content}
+        onLoadContent={(text) => {
+          setContent(text);
+        }}
+      />
       <MonacoEditor
         ref={editor}
         onChange={(value) => {

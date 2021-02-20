@@ -12,6 +12,6 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "outDir": "libs",
-    "baseUrl": ".",
+    "baseUrl": "."
   }
 }

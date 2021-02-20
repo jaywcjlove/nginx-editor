@@ -5,7 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import TurndownService from 'turndown';
 
-type ResultDataItem = Omit<DataItem, 'd'> & { d: string; };
+type ResultDataItem = Omit<DataItem, 'd'> & { d: string };
 type DataItem = {
   /** directive name */
   n: string;
@@ -19,7 +19,7 @@ type DataItem = {
   c?: string;
   /** syntax */
   s?: string;
-}
+};
 
 const turndownService = new TurndownService({
   // codeBlockStyle: 'fenced'
@@ -27,23 +27,24 @@ const turndownService = new TurndownService({
 
 async function request(url: string): Promise<string | undefined> {
   try {
-    const data = await fetch(url).then(res => res.buffer());
+    const data = await fetch(url).then((res) => res.buffer());
     return data.toString();
-  } catch(error) {
+  } catch (error) {
     console.log('ERR:REQUEST:', error);
     process.exitCode = 1;
   }
 }
 
-function nextSibling(child: Element, opt: { tagName: string; class?: string; }) {
+function nextSibling(child: Element, opt: { tagName: string; class?: string }) {
   let nextNode = child;
-  let result = undefined
+  let result = undefined;
   do {
     nextNode = nextNode.nextSibling as Element;
     if (
-      nextNode && nextNode.name
-      && (opt.tagName ? nextNode.tagName === opt.tagName : false)
-      && (opt.class ? nextNode.attribs.class === opt.class : true)
+      nextNode &&
+      nextNode.name &&
+      (opt.tagName ? nextNode.tagName === opt.tagName : false) &&
+      (opt.class ? nextNode.attribs.class === opt.class : true)
     ) {
       result = nextNode;
     }
@@ -58,13 +59,16 @@ async function getData(url: string) {
     if (data) {
       const $ = cheerio.load(data);
       const childs = $('#content').children();
-      const module = childs.first().text().replace(/^Module /g, '');
+      const module = childs
+        .first()
+        .text()
+        .replace(/^Module /g, '');
       const result: DataItem[] = [];
       let resultItem: DataItem = {
         m: module,
         n: '',
         d: [],
-      }
+      };
       let variablesElm: Element = undefined;
       childs.map((idx, child) => {
         if (child.attribs.name && child.tagName === 'a') {
@@ -94,48 +98,54 @@ async function getData(url: string) {
           result.push({ ...resultItem });
         }
       });
-      $(variablesElm).children().map((idx, child) => {
-        if (child.tagName === 'dt' && child.attribs.id) {
-          result.push({
-            m: module,
-            n: $(child).text(),
-            d: [turndownService.turndown($(nextSibling(child, { tagName: 'dd' })).html())]
-          });
-        }
-      });
-      const directivesData: ResultDataItem[] = result.map(item => {
-        const data: ResultDataItem = { m: item.m, n: item.n, d: item.d.join('\n') };
-        if (item.v && item.v.replace(/^—+/g, '')) {
-          data.v = item.v.replace(/^—+/g, '');
-        }
-        if (item.c) {
-          data.c = item.c;
-        }
-        if (item.s && item.s.replace(/(^`+)|(`+$)/g, '')) {
-          data.s = item.s.replace(/(^`+)|(`+$)/g, '');
-        }
-        data.d = data.d.replace(/\[(.[^\]]+)\]\((.[^)]+)\)/g, (str, $1, $2) => {
-          if (/^#/.test($2)) {
-            return `[${$1}](${url}${$2})`;
-          } else if (/^\./.test($2) || !/^http(s)?:/.test($2)) {
-            return `[${$1}](https:/${path.resolve(path.dirname(url.replace(/^https:\//, '')), $2)})`;
+      $(variablesElm)
+        .children()
+        .map((idx, child) => {
+          if (child.tagName === 'dt' && child.attribs.id) {
+            result.push({
+              m: module,
+              n: $(child).text(),
+              d: [turndownService.turndown($(nextSibling(child, { tagName: 'dd' })).html())],
+            });
           }
-          return str;
         });
-        return { ...data  }
-      }).filter(m => m.n && !/^(directives|example|summary)/.test(m.n));
+      const directivesData: ResultDataItem[] = result
+        .map((item) => {
+          const data: ResultDataItem = { m: item.m, n: item.n, d: item.d.join('\n') };
+          if (item.v && item.v.replace(/^—+/g, '')) {
+            data.v = item.v.replace(/^—+/g, '');
+          }
+          if (item.c) {
+            data.c = item.c;
+          }
+          if (item.s && item.s.replace(/(^`+)|(`+$)/g, '')) {
+            data.s = item.s.replace(/(^`+)|(`+$)/g, '');
+          }
+          data.d = data.d.replace(/\[(.[^\]]+)\]\((.[^)]+)\)/g, (str, $1, $2) => {
+            if (/^#/.test($2)) {
+              return `[${$1}](${url}${$2})`;
+            } else if (/^\./.test($2) || !/^http(s)?:/.test($2)) {
+              return `[${$1}](https:/${path.resolve(path.dirname(url.replace(/^https:\//, '')), $2)})`;
+            }
+            return str;
+          });
+          return { ...data };
+        })
+        .filter((m) => m.n && !/^(directives|example|summary)/.test(m.n));
       console.log(`\x1b[35m  ->\x1b[0m Data Length:\x1b[32m ${directivesData.length} \x1b[0m`);
-      console.log(`\x1b[35m  ->\x1b[0m Find Variables Node:\x1b[36m ${variablesElm ? $(variablesElm).length : 0} \x1b[0m`);
+      console.log(
+        `\x1b[35m  ->\x1b[0m Find Variables Node:\x1b[36m ${variablesElm ? $(variablesElm).length : 0} \x1b[0m`,
+      );
       return directivesData;
     }
     return [];
   } catch (error) {
     console.log('ERR:GETDATA:', error);
-    process.exit()
+    process.exit();
   }
 }
 
-;(async () => {
+(async () => {
   let resultData: ResultDataItem[] = [];
 
   const core = await getData('https://nginx.org/en/docs/ngx_core_module.html');
@@ -229,7 +239,94 @@ async function getData(url: string) {
 
   const google_perftools = await getData('https://nginx.org/en/docs/ngx_google_perftools_module.html');
 
-  resultData = resultData.concat(core, http_core, http_access, http_addition, http_api, http_auth_basic, http_auth_jwt, http_auth_request, http_autoindex, http_browser, http_charset, http_dav, http_empty_gif, http_f4f, http_fastcgi, http_flv, http_geo, http_geoip, http_grpc, http_gunzip, http_gzip, http_gzip_static, http_headers, http_hls, http_image_filter, http_index, http_js, http_keyval, http_limit_conn, http_limit_req, http_log, http_map, http_memcached, http_mirror, http_mp4, http_perl, http_proxy, http_random_index, http_realip, http_referer, http_rewrite, http_scgi, http_secure_link, http_session_log, http_slice, http_spdy, http_split_clients, http_ssi, http_ssl, http_status, http_stub_status, http_sub, http_upstream, http_upstream_conf, http_upstream_hc, http_userid, http_uwsgi, http_v2, http_xslt, mail_core, mail_auth_http, mail_proxy, mail_ssl, mail_imap, mail_pop3, mail_smtp, stream_core, stream_access, stream_geo, stream_geoip, stream_js, stream_keyval, stream_limit_conn, stream_log, stream_map, stream_proxy, stream_realip, stream_return, stream_set, stream_split_clients, stream_ssl, stream_ssl_preread, stream_upstream, stream_upstream_hc, stream_zone_sync, google_perftools)
+  resultData = resultData.concat(
+    core,
+    http_core,
+    http_access,
+    http_addition,
+    http_api,
+    http_auth_basic,
+    http_auth_jwt,
+    http_auth_request,
+    http_autoindex,
+    http_browser,
+    http_charset,
+    http_dav,
+    http_empty_gif,
+    http_f4f,
+    http_fastcgi,
+    http_flv,
+    http_geo,
+    http_geoip,
+    http_grpc,
+    http_gunzip,
+    http_gzip,
+    http_gzip_static,
+    http_headers,
+    http_hls,
+    http_image_filter,
+    http_index,
+    http_js,
+    http_keyval,
+    http_limit_conn,
+    http_limit_req,
+    http_log,
+    http_map,
+    http_memcached,
+    http_mirror,
+    http_mp4,
+    http_perl,
+    http_proxy,
+    http_random_index,
+    http_realip,
+    http_referer,
+    http_rewrite,
+    http_scgi,
+    http_secure_link,
+    http_session_log,
+    http_slice,
+    http_spdy,
+    http_split_clients,
+    http_ssi,
+    http_ssl,
+    http_status,
+    http_stub_status,
+    http_sub,
+    http_upstream,
+    http_upstream_conf,
+    http_upstream_hc,
+    http_userid,
+    http_uwsgi,
+    http_v2,
+    http_xslt,
+    mail_core,
+    mail_auth_http,
+    mail_proxy,
+    mail_ssl,
+    mail_imap,
+    mail_pop3,
+    mail_smtp,
+    stream_core,
+    stream_access,
+    stream_geo,
+    stream_geoip,
+    stream_js,
+    stream_keyval,
+    stream_limit_conn,
+    stream_log,
+    stream_map,
+    stream_proxy,
+    stream_realip,
+    stream_return,
+    stream_set,
+    stream_split_clients,
+    stream_ssl,
+    stream_ssl_preread,
+    stream_upstream,
+    stream_upstream_hc,
+    stream_zone_sync,
+    google_perftools,
+  );
   await fs.promises.writeFile(path.resolve(process.cwd(), 'src/directives.json'), JSON.stringify(resultData, null, 2));
   console.log(`\x1b[1;35m Done:\x1b[0m\x1b[32m ${path.resolve(process.cwd(), 'src/directives.json')} \x1b[0m`);
   console.log(`\x1b[1;35m  -> DataSource Length:\x1b[0m\x1b[32m ${resultData.length} \x1b[0m`);

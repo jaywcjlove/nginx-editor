@@ -6,6 +6,22 @@
     {
       "files": ".prettierrc",
       "options": { "parser": "json" }
+    },
+    {
+      "files": "*.{js,jsx}",
+      "options": { "parser": "babel" }
+    },
+    {
+      "files": "*.{ts,tsx}",
+      "options": { "parser": "babel-ts" }
+    },
+    {
+      "files": "*.{ts,tsx}",
+      "options": { "parser": "typescript" }
+    },
+    {
+      "files": "*.{less,css}",
+      "options": { "parser": "css" }
     }
   ]
 }

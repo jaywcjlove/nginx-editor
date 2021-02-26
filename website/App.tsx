@@ -7,6 +7,7 @@ import '../';
 
 const App: React.FC = () => {
   const [content, setContent] = useState(nginxStr || '');
+  const [contentDownload, setContentDownload] = useState(content || nginxStr || '');
   const editor = useRef<RefEditorInstance>(null);
   function resizeHandle(evn: UIEvent) {
     const { target } = evn;
@@ -27,7 +28,7 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <Header
-        content={content}
+        content={contentDownload}
         onLoadContent={(text) => {
           setContent(text);
         }}
@@ -35,7 +36,7 @@ const App: React.FC = () => {
       <MonacoEditor
         ref={editor}
         onChange={(value) => {
-          setContent(value);
+          setContentDownload(value);
         }}
         theme="nginx-theme"
         language="nginx"

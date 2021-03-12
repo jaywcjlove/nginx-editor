@@ -25,6 +25,8 @@
   </a>
 </p>
 
+Forked from [jaywcjlove/nginx-editor](https://github.com/jaywcjlove/nginx-editor)
+
 Nginx language plugin for the [Monaco Editor](https://github.com/microsoft/monaco-editor). It provides the following features when editing [Nginx](https://nginx.org/) config files:
 
 - Syntax highlighting

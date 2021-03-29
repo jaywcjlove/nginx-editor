@@ -55,7 +55,7 @@
     "@kkt/scope-plugin-options": "6.8.2",
     "@uiw/react-monacoeditor": "3.2.1",
     "@types/turndown": "5.0.0",
-    "@types/react": "17.0.2",
+    "@types/react": "17.0.3",
     "@types/react-dom": "17.0.3",
     "cheerio": "1.0.0-rc.5",
     "compile-less-cli": "1.7.0",

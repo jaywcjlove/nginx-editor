@@ -8,7 +8,7 @@
   "scripts": {
     "postinstall": "husky install",
     "prepare": "npm run build:lib",
-    "doc": "kkt build --app-src ./website",
+    "doc": "GENERATE_SOURCEMAP=false kkt build --app-src ./website",
     "start": "kkt start --app-src ./website",
     "build": "npm run build:lib && npm run doc",
     "build:lib": "npm run ts:build && npm run types:esm && npm run types:cjs && npm run css:build",

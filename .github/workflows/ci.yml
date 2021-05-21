@@ -35,7 +35,7 @@ jobs:
     
     - name: Create Tag
       id: create_tag
-      uses: jaywcjlove/create-tag-action@v1.1.7
+      uses: jaywcjlove/create-tag-action@v1.1.8
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         package-path: ./package.json

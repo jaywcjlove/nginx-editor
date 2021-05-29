@@ -6,7 +6,7 @@
   "module": "lib/esm/index.js",
   "homepage": "https://jaywcjlove.github.io/nginx-editor",
   "scripts": {
-    "postinstall": "husky install",
+    "husky": "husky install",
     "prepare": "npm run build:lib",
     "doc": "GENERATE_SOURCEMAP=false kkt build --app-src ./website",
     "start": "kkt start --app-src ./website",

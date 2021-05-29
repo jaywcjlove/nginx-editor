@@ -8,7 +8,7 @@ jobs:
   build-deploy:
     runs-on: ubuntu-18.04
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
 
     - name: Generate Changelog
       uses: jaywcjlove/changelog-generator@v1.3.9
@@ -18,8 +18,7 @@ jobs:
         filter-author: (jaywcjlove|小弟调调™|dependabot\[bot\]|Renovate Bot)
         filter: '[R|r]elease[d]\s+[v|V]\d(\.\d+){0,2}'
 
-    - name: Setup Node
-      uses: actions/setup-node@v2.1.5
+    - uses: actions/setup-node@v2
       with:
         node-version: 14
 
@@ -35,38 +34,35 @@ jobs:
     
     - name: Create Tag
       id: create_tag
-      uses: jaywcjlove/create-tag-action@v1.1.8
+      uses: jaywcjlove/create-tag-action@v1.1.10
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         package-path: ./package.json
 
     - name: Generate Changelog
       id: changelog
-      uses: jaywcjlove/changelog-generator@v1.3.9
+      uses: jaywcjlove/changelog-generator@v1.3.10
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         head-ref: ${{steps.create_tag.outputs.version}}
         filter-author: (jaywcjlove|小弟调调™|dependabot\[bot\]|Renovate Bot)
         filter: '[R|r]elease[d]\s+[v|V]\d(\.\d+){0,2}'
-
+    
     - name: Create Release
-      id: create_release
-      uses: actions/create-release@latest
+      uses: ncipollo/release-action@v1
       if: steps.create_tag.outputs.successful
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.create_tag.outputs.version }}
-        release_name: ${{ steps.create_tag.outputs.version }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        name: ${{ steps.create_tag.outputs.version }}
+        tag: ${{ steps.create_tag.outputs.version }}
         body: |
           [![](https://img.shields.io/badge/Open%20in-unpkg-blue)](https://uiwjs.github.io/npm-unpkg/#/pkg/monaco-editor-nginx@${{steps.create_tag.outputs.versionNumber}}/file/README.md)
           
           ```bash
           npm i monaco-editor-nginx@${{steps.create_tag.outputs.versionNumber}}
           ```
+
           ${{ steps.changelog.outputs.compareurl }}
           ${{ steps.changelog.outputs.changelog }}
-        draft: false
-        prerelease: false
 
     - run: npm run get:nginx

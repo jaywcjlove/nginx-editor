@@ -53,6 +53,19 @@ import 'monaco-editor-nginx';
 />
 ```
 
+or, Integrating the ESM version of the Monaco Editor
+
+```js
+import * as monaco from 'monaco-editor';
+import 'monaco-editor-nginx';
+
+monaco.editor.create(document.getElementById("container"), {
+	theme: 'nginx-theme',
+	value: getCode(),
+	language: 'nginx'
+});
+```
+
 ## Development
 
 Runs the project in development mode.  

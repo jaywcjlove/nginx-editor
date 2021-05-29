@@ -324,7 +324,7 @@
   {
     "m": "ngx_http_core_module",
     "n": "client_max_body_size",
-    "d": "Sets the maximum allowed size of the client request body, specified in the “Content-Length” request header field. If the size in a request exceeds the configured value, the 413 (Request Entity Too Large) error is returned to the client. Please be aware that browsers cannot correctly display this error. Setting `_size_` to 0 disables checking of client request body size.",
+    "d": "Sets the maximum allowed size of the client request body. If the size in a request exceeds the configured value, the 413 (Request Entity Too Large) error is returned to the client. Please be aware that browsers cannot correctly display this error. Setting `_size_` to 0 disables checking of client request body size.",
     "v": "client\\_max\\_body\\_size 1m;",
     "c": "`http`, `server`, `location`",
     "s": "**client_max_body_size** `_size_`;"
@@ -425,10 +425,18 @@
   {
     "m": "ngx_http_core_module",
     "n": "keepalive_requests",
-    "d": "Sets the maximum number of requests that can be served through one keep-alive connection. After the maximum number of requests are made, the connection is closed.\nClosing connections periodically is necessary to free per-connection memory allocations. Therefore, using too high maximum number of requests could result in excessive memory usage and not recommended.",
-    "v": "keepalive\\_requests 100;",
+    "d": "Sets the maximum number of requests that can be served through one keep-alive connection. After the maximum number of requests are made, the connection is closed.\nClosing connections periodically is necessary to free per-connection memory allocations. Therefore, using too high maximum number of requests could result in excessive memory usage and not recommended.\n\nPrior to version 1.19.10, the default value was 100.\n",
+    "v": "keepalive\\_requests 1000;",
     "c": "`http`, `server`, `location`",
     "s": "**keepalive_requests** `_number_`;"
+  },
+  {
+    "m": "ngx_http_core_module",
+    "n": "keepalive_time",
+    "d": "Limits the maximum time during which requests can be processed through one keep-alive connection. After this time is reached, the connection is closed following the subsequent request processing.",
+    "v": "keepalive\\_time 1h;",
+    "c": "`http`, `server`, `location`",
+    "s": "**keepalive_time** `_time_`;"
   },
   {
     "m": "ngx_http_core_module",
@@ -496,7 +504,7 @@
   {
     "m": "ngx_http_core_module",
     "n": "listen",
-    "d": "Sets the `_address_` and `_port_` for IP, or the `_path_` for a UNIX-domain socket on which the server will accept requests. Both `_address_` and `_port_`, or only `_address_` or only `_port_` can be specified. An `_address_` may also be a hostname, for example:\n```\nlisten 127.0.0.1:8000;\nlisten 127.0.0.1;\nlisten 8000;\nlisten *:8000;\nlisten localhost:8000;\n\n```\nIPv6 addresses (0.7.36) are specified in square brackets:\n```\nlisten [::]:8000;\nlisten [::1];\n\n```\nUNIX-domain sockets (0.8.21) are specified with the “`unix:`” prefix:\n```\nlisten unix:/var/run/nginx.sock;\n\n```\n\nIf only `_address_` is given, the port 80 is used.\nIf the directive is not present then either `*:80` is used if nginx runs with the superuser privileges, or `*:8000` otherwise.\nThe `default_server` parameter, if present, will cause the server to become the default server for the specified `_address_`:`_port_` pair. If none of the directives have the `default_server` parameter then the first server with the `_address_`:`_port_` pair will be the default server for this pair.\nIn versions prior to 0.8.21 this parameter is named simply `default`.\n\nThe `ssl` parameter (0.7.14) allows specifying that all connections accepted on this port should work in SSL mode. This allows for a more compact [configuration](https://nginx.org/en/docs/http/configuring_https_servers.html#single_http_https_server) for the server that handles both HTTP and HTTPS requests.\nThe `http2` parameter (1.9.5) configures the port to accept [HTTP/2](https://nginx.org/en/docs/http/ngx_http_v2_module.html) connections. Normally, for this to work the `ssl` parameter should be specified as well, but nginx can also be configured to accept HTTP/2 connections without SSL.\nThe `spdy` parameter (1.3.15-1.9.4) allows accepting [SPDY](https://nginx.org/en/docs/http/ngx_http_spdy_module.html) connections on this port. Normally, for this to work the `ssl` parameter should be specified as well, but nginx can also be configured to accept SPDY connections without SSL.\nThe `proxy_protocol` parameter (1.5.12) allows specifying that all connections accepted on this port should use the [PROXY protocol](http://www.haproxy.org/download/1.5/doc/proxy-protocol.txt).\nThe PROXY protocol version 2 is supported since version 1.13.11.\n\nThe `listen` directive can have several additional parameters specific to socket-related system calls. These parameters can be specified in any `listen` directive, but only once for a given `_address_`:`_port_` pair.\nIn versions prior to 0.8.21, they could only be specified in the `listen` directive together with the `default` parameter.\n\n`setfib`\\=`_number_`\n\nthis parameter (0.8.44) sets the associated routing table, FIB (the `SO_SETFIB` option) for the listening socket. This currently works only on FreeBSD.\n\n`fastopen`\\=`_number_`\n\nenables “[TCP Fast Open](http://en.wikipedia.org/wiki/TCP_Fast_Open)” for the listening socket (1.5.8) and [limits](https://tools.ietf.org/html/rfc7413#section-5.1) the maximum length for the queue of connections that have not yet completed the three-way handshake.\n\n> Do not enable this feature unless the server can handle receiving the [same SYN packet with data](https://tools.ietf.org/html/rfc7413#section-6.1) more than once.\n\n`backlog`\\=`_number_`\n\nsets the `backlog` parameter in the `listen()` call that limits the maximum length for the queue of pending connections. By default, `backlog` is set to -1 on FreeBSD, DragonFly BSD, and macOS, and to 511 on other platforms.\n\n`rcvbuf`\\=`_size_`\n\nsets the receive buffer size (the `SO_RCVBUF` option) for the listening socket.\n\n`sndbuf`\\=`_size_`\n\nsets the send buffer size (the `SO_SNDBUF` option) for the listening socket.\n\n`accept_filter`\\=`_filter_`\n\nsets the name of accept filter (the `SO_ACCEPTFILTER` option) for the listening socket that filters incoming connections before passing them to `accept()`. This works only on FreeBSD and NetBSD 5.0+. Possible values are [dataready](http://man.freebsd.org/accf_data) and [httpready](http://man.freebsd.org/accf_http).\n\n`deferred`\n\ninstructs to use a deferred `accept()` (the `TCP_DEFER_ACCEPT` socket option) on Linux.\n\n`bind`\n\ninstructs to make a separate `bind()` call for a given `_address_`:`_port_` pair. This is useful because if there are several `listen` directives with the same port but different addresses, and one of the `listen` directives listens on all addresses for the given port (`*:``_port_`), nginx will `bind()` only to `*:``_port_`. It should be noted that the `getsockname()` system call will be made in this case to determine the address that accepted the connection. If the `setfib`, `backlog`, `rcvbuf`, `sndbuf`, `accept_filter`, `deferred`, `ipv6only`, or `so_keepalive` parameters are used then for a given `_address_`:`_port_` pair a separate `bind()` call will always be made.\n\n`ipv6only`\\=`on`|`off`\n\nthis parameter (0.7.42) determines (via the `IPV6_V6ONLY` socket option) whether an IPv6 socket listening on a wildcard address `[::]` will accept only IPv6 connections or both IPv6 and IPv4 connections. This parameter is turned on by default. It can only be set once on start.\n\n> Prior to version 1.3.4, if this parameter was omitted then the operating system’s settings were in effect for the socket.\n\n`reuseport`\n\nthis parameter (1.9.1) instructs to create an individual listening socket for each worker process (using the `SO_REUSEPORT` socket option on Linux 3.9+ and DragonFly BSD, or `SO_REUSEPORT_LB` on FreeBSD 12+), allowing a kernel to distribute incoming connections between worker processes. This currently works only on Linux 3.9+, DragonFly BSD, and FreeBSD 12+ (1.15.1).\n\n> Inappropriate use of this option may have its security [implications](http://man7.org/linux/man-pages/man7/socket.7.html).\n\n`so_keepalive`\\=`on`|`off`|\\[`_keepidle_`\\]:\\[`_keepintvl_`\\]:\\[`_keepcnt_`\\]\n\nthis parameter (1.1.11) configures the “TCP keepalive” behavior for the listening socket. If this parameter is omitted then the operating system’s settings will be in effect for the socket. If it is set to the value “`on`”, the `SO_KEEPALIVE` option is turned on for the socket. If it is set to the value “`off`”, the `SO_KEEPALIVE` option is turned off for the socket. Some operating systems support setting of TCP keepalive parameters on a per-socket basis using the `TCP_KEEPIDLE`, `TCP_KEEPINTVL`, and `TCP_KEEPCNT` socket options. On such systems (currently, Linux 2.4+, NetBSD 5+, and FreeBSD 9.0-STABLE), they can be configured using the `_keepidle_`, `_keepintvl_`, and `_keepcnt_` parameters. One or two parameters may be omitted, in which case the system default setting for the corresponding socket option will be in effect. For example,\n\n> so\\_keepalive=30m::10\n\nwill set the idle timeout (`TCP_KEEPIDLE`) to 30 minutes, leave the probe interval (`TCP_KEEPINTVL`) at its system default, and set the probes count (`TCP_KEEPCNT`) to 10 probes.\n\nExample:\n```\nlisten 127.0.0.1 default_server accept_filter=dataready backlog=1024;\n\n```\n",
+    "d": "Sets the `_address_` and `_port_` for IP, or the `_path_` for a UNIX-domain socket on which the server will accept requests. Both `_address_` and `_port_`, or only `_address_` or only `_port_` can be specified. An `_address_` may also be a hostname, for example:\n```\nlisten 127.0.0.1:8000;\nlisten 127.0.0.1;\nlisten 8000;\nlisten *:8000;\nlisten localhost:8000;\n\n```\nIPv6 addresses (0.7.36) are specified in square brackets:\n```\nlisten [::]:8000;\nlisten [::1];\n\n```\nUNIX-domain sockets (0.8.21) are specified with the “`unix:`” prefix:\n```\nlisten unix:/var/run/nginx.sock;\n\n```\n\nIf only `_address_` is given, the port 80 is used.\nIf the directive is not present then either `*:80` is used if nginx runs with the superuser privileges, or `*:8000` otherwise.\nThe `default_server` parameter, if present, will cause the server to become the default server for the specified `_address_`:`_port_` pair. If none of the directives have the `default_server` parameter then the first server with the `_address_`:`_port_` pair will be the default server for this pair.\nIn versions prior to 0.8.21 this parameter is named simply `default`.\n\nThe `ssl` parameter (0.7.14) allows specifying that all connections accepted on this port should work in SSL mode. This allows for a more compact [configuration](https://nginx.org/en/docs/http/configuring_https_servers.html#single_http_https_server) for the server that handles both HTTP and HTTPS requests.\nThe `http2` parameter (1.9.5) configures the port to accept [HTTP/2](https://nginx.org/en/docs/http/ngx_http_v2_module.html) connections. Normally, for this to work the `ssl` parameter should be specified as well, but nginx can also be configured to accept HTTP/2 connections without SSL.\nThe `spdy` parameter (1.3.15-1.9.4) allows accepting [SPDY](https://nginx.org/en/docs/http/ngx_http_spdy_module.html) connections on this port. Normally, for this to work the `ssl` parameter should be specified as well, but nginx can also be configured to accept SPDY connections without SSL.\nThe `proxy_protocol` parameter (1.5.12) allows specifying that all connections accepted on this port should use the [PROXY protocol](http://www.haproxy.org/download/1.5/doc/proxy-protocol.txt).\nThe PROXY protocol version 2 is supported since version 1.13.11.\n\nThe `listen` directive can have several additional parameters specific to socket-related system calls. These parameters can be specified in any `listen` directive, but only once for a given `_address_`:`_port_` pair.\nIn versions prior to 0.8.21, they could only be specified in the `listen` directive together with the `default` parameter.\n\n`setfib`\\=`_number_`\n\nthis parameter (0.8.44) sets the associated routing table, FIB (the `SO_SETFIB` option) for the listening socket. This currently works only on FreeBSD.\n\n`fastopen`\\=`_number_`\n\nenables “[TCP Fast Open](http://en.wikipedia.org/wiki/TCP_Fast_Open)” for the listening socket (1.5.8) and [limits](https://tools.ietf.org/html/rfc7413#section-5.1) the maximum length for the queue of connections that have not yet completed the three-way handshake.\n\n> Do not enable this feature unless the server can handle receiving the [same SYN packet with data](https://tools.ietf.org/html/rfc7413#section-6.1) more than once.\n\n`backlog`\\=`_number_`\n\nsets the `backlog` parameter in the `listen()` call that limits the maximum length for the queue of pending connections. By default, `backlog` is set to -1 on FreeBSD, DragonFly BSD, and macOS, and to 511 on other platforms.\n\n`rcvbuf`\\=`_size_`\n\nsets the receive buffer size (the `SO_RCVBUF` option) for the listening socket.\n\n`sndbuf`\\=`_size_`\n\nsets the send buffer size (the `SO_SNDBUF` option) for the listening socket.\n\n`accept_filter`\\=`_filter_`\n\nsets the name of accept filter (the `SO_ACCEPTFILTER` option) for the listening socket that filters incoming connections before passing them to `accept()`. This works only on FreeBSD and NetBSD 5.0+. Possible values are [dataready](http://man.freebsd.org/accf_data) and [httpready](http://man.freebsd.org/accf_http).\n\n`deferred`\n\ninstructs to use a deferred `accept()` (the `TCP_DEFER_ACCEPT` socket option) on Linux.\n\n`bind`\n\ninstructs to make a separate `bind()` call for a given `_address_`:`_port_` pair. This is useful because if there are several `listen` directives with the same port but different addresses, and one of the `listen` directives listens on all addresses for the given port (`*:``_port_`), nginx will `bind()` only to `*:``_port_`. It should be noted that the `getsockname()` system call will be made in this case to determine the address that accepted the connection. If the `setfib`, `fastopen`, `backlog`, `rcvbuf`, `sndbuf`, `accept_filter`, `deferred`, `ipv6only`, `reuseport`, or `so_keepalive` parameters are used then for a given `_address_`:`_port_` pair a separate `bind()` call will always be made.\n\n`ipv6only`\\=`on`|`off`\n\nthis parameter (0.7.42) determines (via the `IPV6_V6ONLY` socket option) whether an IPv6 socket listening on a wildcard address `[::]` will accept only IPv6 connections or both IPv6 and IPv4 connections. This parameter is turned on by default. It can only be set once on start.\n\n> Prior to version 1.3.4, if this parameter was omitted then the operating system’s settings were in effect for the socket.\n\n`reuseport`\n\nthis parameter (1.9.1) instructs to create an individual listening socket for each worker process (using the `SO_REUSEPORT` socket option on Linux 3.9+ and DragonFly BSD, or `SO_REUSEPORT_LB` on FreeBSD 12+), allowing a kernel to distribute incoming connections between worker processes. This currently works only on Linux 3.9+, DragonFly BSD, and FreeBSD 12+ (1.15.1).\n\n> Inappropriate use of this option may have its security [implications](http://man7.org/linux/man-pages/man7/socket.7.html).\n\n`so_keepalive`\\=`on`|`off`|\\[`_keepidle_`\\]:\\[`_keepintvl_`\\]:\\[`_keepcnt_`\\]\n\nthis parameter (1.1.11) configures the “TCP keepalive” behavior for the listening socket. If this parameter is omitted then the operating system’s settings will be in effect for the socket. If it is set to the value “`on`”, the `SO_KEEPALIVE` option is turned on for the socket. If it is set to the value “`off`”, the `SO_KEEPALIVE` option is turned off for the socket. Some operating systems support setting of TCP keepalive parameters on a per-socket basis using the `TCP_KEEPIDLE`, `TCP_KEEPINTVL`, and `TCP_KEEPCNT` socket options. On such systems (currently, Linux 2.4+, NetBSD 5+, and FreeBSD 9.0-STABLE), they can be configured using the `_keepidle_`, `_keepintvl_`, and `_keepcnt_` parameters. One or two parameters may be omitted, in which case the system default setting for the corresponding socket option will be in effect. For example,\n\n> so\\_keepalive=30m::10\n\nwill set the idle timeout (`TCP_KEEPIDLE`) to 30 minutes, leave the probe interval (`TCP_KEEPINTVL`) at its system default, and set the probes count (`TCP_KEEPCNT`) to 10 probes.\n\nExample:\n```\nlisten 127.0.0.1 default_server accept_filter=dataready backlog=1024;\n\n```\n",
     "v": "listen \\*:80 | \\*:8000;",
     "c": "`server`",
     "s": "**listen** `_address_`[:`_port_`] [`default_server`] [`ssl`] [`http2` | `spdy`] [`proxy_protocol`] [`setfib`=`_number_`] [`fastopen`=`_number_`] [`backlog`=`_number_`] [`rcvbuf`=`_size_`] [`sndbuf`=`_size_`] [`accept_filter`=`_filter_`] [`deferred`] [`bind`] [`ipv6only`=`on`|`off`] [`reuseport`] [`so_keepalive`=`on`|`off`|[`_keepidle_`]:[`_keepintvl_`]:[`_keepcnt_`]];``  \n``**listen** `_port_` [`default_server`] [`ssl`] [`http2` | `spdy`] [`proxy_protocol`] [`setfib`=`_number_`] [`fastopen`=`_number_`] [`backlog`=`_number_`] [`rcvbuf`=`_size_`] [`sndbuf`=`_size_`] [`accept_filter`=`_filter_`] [`deferred`] [`bind`] [`ipv6only`=`on`|`off`] [`reuseport`] [`so_keepalive`=`on`|`off`|[`_keepidle_`]:[`_keepintvl_`]:[`_keepcnt_`]];``  \n```**listen** `unix:``_path_` [`default_server`] [`ssl`] [`http2` | `spdy`] [`proxy_protocol`] [`backlog`=`_number_`] [`rcvbuf`=`_size_`] [`sndbuf`=`_size_`] [`accept_filter`=`_filter_`] [`deferred`] [`bind`] [`so_keepalive`=`on`|`off`|[`_keepidle_`]:[`_keepintvl_`]:[`_keepcnt_`]];"
@@ -864,7 +872,7 @@
   {
     "m": "ngx_http_core_module",
     "n": "variables",
-    "d": "#### Embedded Variables\nThe `ngx_http_core_module` module supports embedded variables with names matching the Apache Server variables. First of all, these are variables representing client request header fields, such as `$http_user_agent`, `$http_cookie`, and so on. Also there are other variables:\n`$arg_``_name_`\n\nargument `_name_` in the request line\n\n`$args`\n\narguments in the request line\n\n`$binary_remote_addr`\n\nclient address in a binary form, value’s length is always 4 bytes for IPv4 addresses or 16 bytes for IPv6 addresses\n\n`$body_bytes_sent`\n\nnumber of bytes sent to a client, not counting the response header; this variable is compatible with the “`%B`” parameter of the `mod_log_config` Apache module\n\n`$bytes_sent`\n\nnumber of bytes sent to a client (1.3.8, 1.2.5)\n\n`$connection`\n\nconnection serial number (1.3.8, 1.2.5)\n\n`$connection_requests`\n\ncurrent number of requests made through a connection (1.3.8, 1.2.5)\n\n`$content_length`\n\n“Content-Length” request header field\n\n`$content_type`\n\n“Content-Type” request header field\n\n`$cookie_``_name_`\n\nthe `_name_` cookie\n\n`$document_root`\n\n[root](https://nginx.org/en/docs/http/ngx_http_core_module.html#root) or [alias](https://nginx.org/en/docs/http/ngx_http_core_module.html#alias) directive’s value for the current request\n\n`$document_uri`\n\nsame as `$uri`\n\n`$host`\n\nin this order of precedence: host name from the request line, or host name from the “Host” request header field, or the server name matching a request\n\n`$hostname`\n\nhost name\n\n`$http_``_name_`\n\narbitrary request header field; the last part of a variable name is the field name converted to lower case with dashes replaced by underscores\n\n`$https`\n\n“`on`” if connection operates in SSL mode, or an empty string otherwise\n\n`$is_args`\n\n“`?`” if a request line has arguments, or an empty string otherwise\n\n`$limit_rate`\n\nsetting this variable enables response rate limiting; see [limit\\_rate](https://nginx.org/en/docs/http/ngx_http_core_module.html#limit_rate)\n\n`$msec`\n\ncurrent time in seconds with the milliseconds resolution (1.3.9, 1.2.6)\n\n`$nginx_version`\n\nnginx version\n\n`$pid`\n\nPID of the worker process\n\n`$pipe`\n\n“`p`” if request was pipelined, “`.`” otherwise (1.3.12, 1.2.7)\n\n`$proxy_protocol_addr`\n\nclient address from the PROXY protocol header (1.5.12)\n\nThe PROXY protocol must be previously enabled by setting the `proxy_protocol` parameter in the [listen](https://nginx.org/en/docs/http/ngx_http_core_module.html#listen) directive.\n\n`$proxy_protocol_port`\n\nclient port from the PROXY protocol header (1.11.0)\n\nThe PROXY protocol must be previously enabled by setting the `proxy_protocol` parameter in the [listen](https://nginx.org/en/docs/http/ngx_http_core_module.html#listen) directive.\n\n`$proxy_protocol_server_addr`\n\nserver address from the PROXY protocol header (1.17.6)\n\nThe PROXY protocol must be previously enabled by setting the `proxy_protocol` parameter in the [listen](https://nginx.org/en/docs/http/ngx_http_core_module.html#listen) directive.\n\n`$proxy_protocol_server_port`\n\nserver port from the PROXY protocol header (1.17.6)\n\nThe PROXY protocol must be previously enabled by setting the `proxy_protocol` parameter in the [listen](https://nginx.org/en/docs/http/ngx_http_core_module.html#listen) directive.\n\n`$query_string`\n\nsame as `$args`\n\n`$realpath_root`\n\nan absolute pathname corresponding to the [root](https://nginx.org/en/docs/http/ngx_http_core_module.html#root) or [alias](https://nginx.org/en/docs/http/ngx_http_core_module.html#alias) directive’s value for the current request, with all symbolic links resolved to real paths\n\n`$remote_addr`\n\nclient address\n\n`$remote_port`\n\nclient port\n\n`$remote_user`\n\nuser name supplied with the Basic authentication\n\n`$request`\n\nfull original request line\n\n`$request_body`\n\nrequest body\n\nThe variable’s value is made available in locations processed by the [proxy\\_pass](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_pass), [fastcgi\\_pass](https://nginx.org/en/docs/http/ngx_http_fastcgi_module.html#fastcgi_pass), [uwsgi\\_pass](https://nginx.org/en/docs/http/ngx_http_uwsgi_module.html#uwsgi_pass), and [scgi\\_pass](https://nginx.org/en/docs/http/ngx_http_scgi_module.html#scgi_pass) directives when the request body was read to a [memory buffer](https://nginx.org/en/docs/http/ngx_http_core_module.html#client_body_buffer_size).\n\n`$request_body_file`\n\nname of a temporary file with the request body\n\nAt the end of processing, the file needs to be removed. To always write the request body to a file, [client\\_body\\_in\\_file\\_only](https://nginx.org/en/docs/http/ngx_http_core_module.html#client_body_in_file_only) needs to be enabled. When the name of a temporary file is passed in a proxied request or in a request to a FastCGI/uwsgi/SCGI server, passing the request body should be disabled by the [proxy\\_pass\\_request\\_body off](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_pass_request_body), [fastcgi\\_pass\\_request\\_body off](https://nginx.org/en/docs/http/ngx_http_fastcgi_module.html#fastcgi_pass_request_body), [uwsgi\\_pass\\_request\\_body off](https://nginx.org/en/docs/http/ngx_http_uwsgi_module.html#uwsgi_pass_request_body), or [scgi\\_pass\\_request\\_body off](https://nginx.org/en/docs/http/ngx_http_scgi_module.html#scgi_pass_request_body) directives, respectively.\n\n`$request_completion`\n\n“`OK`” if a request has completed, or an empty string otherwise\n\n`$request_filename`\n\nfile path for the current request, based on the [root](https://nginx.org/en/docs/http/ngx_http_core_module.html#root) or [alias](https://nginx.org/en/docs/http/ngx_http_core_module.html#alias) directives, and the request URI\n\n`$request_id`\n\nunique request identifier generated from 16 random bytes, in hexadecimal (1.11.0)\n\n`$request_length`\n\nrequest length (including request line, header, and request body) (1.3.12, 1.2.7)\n\n`$request_method`\n\nrequest method, usually “`GET`” or “`POST`”\n\n`$request_time`\n\nrequest processing time in seconds with a milliseconds resolution (1.3.9, 1.2.6); time elapsed since the first bytes were read from the client\n\n`$request_uri`\n\nfull original request URI (with arguments)\n\n`$scheme`\n\nrequest scheme, “`http`” or “`https`”\n\n`$sent_http_``_name_`\n\narbitrary response header field; the last part of a variable name is the field name converted to lower case with dashes replaced by underscores\n\n`$sent_trailer_``_name_`\n\narbitrary field sent at the end of the response (1.13.2); the last part of a variable name is the field name converted to lower case with dashes replaced by underscores\n\n`$server_addr`\n\nan address of the server which accepted a request\n\nComputing a value of this variable usually requires one system call. To avoid a system call, the [listen](https://nginx.org/en/docs/http/ngx_http_core_module.html#listen) directives must specify addresses and use the `bind` parameter.\n\n`$server_name`\n\nname of the server which accepted a request\n\n`$server_port`\n\nport of the server which accepted a request\n\n`$server_protocol`\n\nrequest protocol, usually “`HTTP/1.0`”, “`HTTP/1.1`”, or “[HTTP/2.0](https://nginx.org/en/docs/http/ngx_http_v2_module.html)”\n\n`$status`\n\nresponse status (1.3.2, 1.2.2)\n\n`$tcpinfo_rtt`, `$tcpinfo_rttvar`, `$tcpinfo_snd_cwnd`, `$tcpinfo_rcv_space`\n\ninformation about the client TCP connection; available on systems that support the `TCP_INFO` socket option\n\n`$time_iso8601`\n\nlocal time in the ISO 8601 standard format (1.3.12, 1.2.7)\n\n`$time_local`\n\nlocal time in the Common Log Format (1.3.12, 1.2.7)\n\n`$uri`\n\ncurrent URI in request, [normalized](https://nginx.org/en/docs/http/ngx_http_core_module.html#location)\n\nThe value of `$uri` may change during request processing, e.g. when doing internal redirects, or when using index files.\n",
+    "d": "#### Embedded Variables\nThe `ngx_http_core_module` module supports embedded variables with names matching the Apache Server variables. First of all, these are variables representing client request header fields, such as `$http_user_agent`, `$http_cookie`, and so on. Also there are other variables:\n`$arg_``_name_`\n\nargument `_name_` in the request line\n\n`$args`\n\narguments in the request line\n\n`$binary_remote_addr`\n\nclient address in a binary form, value’s length is always 4 bytes for IPv4 addresses or 16 bytes for IPv6 addresses\n\n`$body_bytes_sent`\n\nnumber of bytes sent to a client, not counting the response header; this variable is compatible with the “`%B`” parameter of the `mod_log_config` Apache module\n\n`$bytes_sent`\n\nnumber of bytes sent to a client (1.3.8, 1.2.5)\n\n`$connection`\n\nconnection serial number (1.3.8, 1.2.5)\n\n`$connection_requests`\n\ncurrent number of requests made through a connection (1.3.8, 1.2.5)\n\n`$connection_time`\n\nconnection time in seconds with a milliseconds resolution (1.19.10)\n\n`$content_length`\n\n“Content-Length” request header field\n\n`$content_type`\n\n“Content-Type” request header field\n\n`$cookie_``_name_`\n\nthe `_name_` cookie\n\n`$document_root`\n\n[root](https://nginx.org/en/docs/http/ngx_http_core_module.html#root) or [alias](https://nginx.org/en/docs/http/ngx_http_core_module.html#alias) directive’s value for the current request\n\n`$document_uri`\n\nsame as `$uri`\n\n`$host`\n\nin this order of precedence: host name from the request line, or host name from the “Host” request header field, or the server name matching a request\n\n`$hostname`\n\nhost name\n\n`$http_``_name_`\n\narbitrary request header field; the last part of a variable name is the field name converted to lower case with dashes replaced by underscores\n\n`$https`\n\n“`on`” if connection operates in SSL mode, or an empty string otherwise\n\n`$is_args`\n\n“`?`” if a request line has arguments, or an empty string otherwise\n\n`$limit_rate`\n\nsetting this variable enables response rate limiting; see [limit\\_rate](https://nginx.org/en/docs/http/ngx_http_core_module.html#limit_rate)\n\n`$msec`\n\ncurrent time in seconds with the milliseconds resolution (1.3.9, 1.2.6)\n\n`$nginx_version`\n\nnginx version\n\n`$pid`\n\nPID of the worker process\n\n`$pipe`\n\n“`p`” if request was pipelined, “`.`” otherwise (1.3.12, 1.2.7)\n\n`$proxy_protocol_addr`\n\nclient address from the PROXY protocol header (1.5.12)\n\nThe PROXY protocol must be previously enabled by setting the `proxy_protocol` parameter in the [listen](https://nginx.org/en/docs/http/ngx_http_core_module.html#listen) directive.\n\n`$proxy_protocol_port`\n\nclient port from the PROXY protocol header (1.11.0)\n\nThe PROXY protocol must be previously enabled by setting the `proxy_protocol` parameter in the [listen](https://nginx.org/en/docs/http/ngx_http_core_module.html#listen) directive.\n\n`$proxy_protocol_server_addr`\n\nserver address from the PROXY protocol header (1.17.6)\n\nThe PROXY protocol must be previously enabled by setting the `proxy_protocol` parameter in the [listen](https://nginx.org/en/docs/http/ngx_http_core_module.html#listen) directive.\n\n`$proxy_protocol_server_port`\n\nserver port from the PROXY protocol header (1.17.6)\n\nThe PROXY protocol must be previously enabled by setting the `proxy_protocol` parameter in the [listen](https://nginx.org/en/docs/http/ngx_http_core_module.html#listen) directive.\n\n`$query_string`\n\nsame as `$args`\n\n`$realpath_root`\n\nan absolute pathname corresponding to the [root](https://nginx.org/en/docs/http/ngx_http_core_module.html#root) or [alias](https://nginx.org/en/docs/http/ngx_http_core_module.html#alias) directive’s value for the current request, with all symbolic links resolved to real paths\n\n`$remote_addr`\n\nclient address\n\n`$remote_port`\n\nclient port\n\n`$remote_user`\n\nuser name supplied with the Basic authentication\n\n`$request`\n\nfull original request line\n\n`$request_body`\n\nrequest body\n\nThe variable’s value is made available in locations processed by the [proxy\\_pass](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_pass), [fastcgi\\_pass](https://nginx.org/en/docs/http/ngx_http_fastcgi_module.html#fastcgi_pass), [uwsgi\\_pass](https://nginx.org/en/docs/http/ngx_http_uwsgi_module.html#uwsgi_pass), and [scgi\\_pass](https://nginx.org/en/docs/http/ngx_http_scgi_module.html#scgi_pass) directives when the request body was read to a [memory buffer](https://nginx.org/en/docs/http/ngx_http_core_module.html#client_body_buffer_size).\n\n`$request_body_file`\n\nname of a temporary file with the request body\n\nAt the end of processing, the file needs to be removed. To always write the request body to a file, [client\\_body\\_in\\_file\\_only](https://nginx.org/en/docs/http/ngx_http_core_module.html#client_body_in_file_only) needs to be enabled. When the name of a temporary file is passed in a proxied request or in a request to a FastCGI/uwsgi/SCGI server, passing the request body should be disabled by the [proxy\\_pass\\_request\\_body off](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_pass_request_body), [fastcgi\\_pass\\_request\\_body off](https://nginx.org/en/docs/http/ngx_http_fastcgi_module.html#fastcgi_pass_request_body), [uwsgi\\_pass\\_request\\_body off](https://nginx.org/en/docs/http/ngx_http_uwsgi_module.html#uwsgi_pass_request_body), or [scgi\\_pass\\_request\\_body off](https://nginx.org/en/docs/http/ngx_http_scgi_module.html#scgi_pass_request_body) directives, respectively.\n\n`$request_completion`\n\n“`OK`” if a request has completed, or an empty string otherwise\n\n`$request_filename`\n\nfile path for the current request, based on the [root](https://nginx.org/en/docs/http/ngx_http_core_module.html#root) or [alias](https://nginx.org/en/docs/http/ngx_http_core_module.html#alias) directives, and the request URI\n\n`$request_id`\n\nunique request identifier generated from 16 random bytes, in hexadecimal (1.11.0)\n\n`$request_length`\n\nrequest length (including request line, header, and request body) (1.3.12, 1.2.7)\n\n`$request_method`\n\nrequest method, usually “`GET`” or “`POST`”\n\n`$request_time`\n\nrequest processing time in seconds with a milliseconds resolution (1.3.9, 1.2.6); time elapsed since the first bytes were read from the client\n\n`$request_uri`\n\nfull original request URI (with arguments)\n\n`$scheme`\n\nrequest scheme, “`http`” or “`https`”\n\n`$sent_http_``_name_`\n\narbitrary response header field; the last part of a variable name is the field name converted to lower case with dashes replaced by underscores\n\n`$sent_trailer_``_name_`\n\narbitrary field sent at the end of the response (1.13.2); the last part of a variable name is the field name converted to lower case with dashes replaced by underscores\n\n`$server_addr`\n\nan address of the server which accepted a request\n\nComputing a value of this variable usually requires one system call. To avoid a system call, the [listen](https://nginx.org/en/docs/http/ngx_http_core_module.html#listen) directives must specify addresses and use the `bind` parameter.\n\n`$server_name`\n\nname of the server which accepted a request\n\n`$server_port`\n\nport of the server which accepted a request\n\n`$server_protocol`\n\nrequest protocol, usually “`HTTP/1.0`”, “`HTTP/1.1`”, or “[HTTP/2.0](https://nginx.org/en/docs/http/ngx_http_v2_module.html)”\n\n`$status`\n\nresponse status (1.3.2, 1.2.2)\n\n`$tcpinfo_rtt`, `$tcpinfo_rttvar`, `$tcpinfo_snd_cwnd`, `$tcpinfo_rcv_space`\n\ninformation about the client TCP connection; available on systems that support the `TCP_INFO` socket option\n\n`$time_iso8601`\n\nlocal time in the ISO 8601 standard format (1.3.12, 1.2.7)\n\n`$time_local`\n\nlocal time in the Common Log Format (1.3.12, 1.2.7)\n\n`$uri`\n\ncurrent URI in request, [normalized](https://nginx.org/en/docs/http/ngx_http_core_module.html#location)\n\nThe value of `$uri` may change during request processing, e.g. when doing internal redirects, or when using index files.\n",
     "v": "variables\\_hash\\_max\\_size 1024;",
     "c": "`http`",
     "s": "**variables_hash_max_size** `_size_`;"
@@ -902,6 +910,11 @@
   {
     "m": "ngx_http_core_module",
     "n": "$connection_requests",
+    "d": "current URI in request, [normalized](https://nginx.org/en/docs/http/ngx_http_core_module.html#location)\n\nThe value of `$uri` may change during request processing, e.g. when doing internal redirects, or when using index files."
+  },
+  {
+    "m": "ngx_http_core_module",
+    "n": "$connection_time",
     "d": "current URI in request, [normalized](https://nginx.org/en/docs/http/ngx_http_core_module.html#location)\n\nThe value of `$uri` may change during request processing, e.g. when doing internal redirects, or when using index files."
   },
   {
@@ -1236,6 +1249,11 @@
   },
   {
     "m": "ngx_http_auth_jwt_module",
+    "n": "algorithms",
+    "d": "#### Supported Algorithms\nThe module supports the following JSON Web [Algorithms](https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms).\nJWS algorithms:\n*   HS256, HS384, HS512\n*   RS256, RS384, RS512\n*   ES256, ES384, ES512\n*   EdDSA (Ed25519 and Ed448 signatures) (1.15.7)\n\nPrior to version 1.13.7, only HS256, RS256, ES256 algorithms were supported.\n\nJWE content encryption algorithms (1.19.7):\n*   A128CBC-HS256, A192CBC-HS384, A256CBC-HS512\n*   A128GCM, A192GCM, A256GCM\n\nJWE key management algorithms (1.19.9):\n*   A128KW, A192KW, A256KW\n*   A128GCMKW, A192GCMKW, A256GCMKW\n*   dir - direct use of a shared symmetric key as the content encryption key\n"
+  },
+  {
+    "m": "ngx_http_auth_jwt_module",
     "n": "auth_jwt",
     "d": "Enables validation of JSON Web Token. The specified `_string_` is used as a `realm`. Parameter value can contain variables.\nThe optional `token` parameter specifies a variable that contains JSON Web Token. By default, JWT is passed in the “Authorization” header as a [Bearer Token](https://tools.ietf.org/html/rfc6750). JWT may be also passed as a cookie or a part of a query string:\n```\nauth_jwt \"closed site\" token=$cookie_auth_token;\n\n```\n\nThe special value `off` cancels the effect of the `auth_jwt` directive inherited from the previous configuration level.",
     "v": "auth\\_jwt off;",
@@ -1245,7 +1263,7 @@
   {
     "m": "ngx_http_auth_jwt_module",
     "n": "auth_jwt_claim_set",
-    "d": "Sets the `_variable_` to a JWT claim parameter identified by key names. Name matching starts from the top level of the JSON tree. For arrays, the variable keeps a list of array elements separated by commas.\n```\nauth_jwt_claim_set $email info e-mail;\nauth_jwt_claim_set $job info \"job title\";\n\n```\n\nPrior to version 1.13.7, only one key name could be specified, and the result was undefined for arrays.\n",
+    "d": "Sets the `_variable_` to a JWT claim parameter identified by key names. Name matching starts from the top level of the JSON tree. For arrays, the variable keeps a list of array elements separated by commas.\n```\nauth_jwt_claim_set $email info e-mail;\nauth_jwt_claim_set $job info \"job title\";\n\n```\n\nPrior to version 1.13.7, only one key name could be specified, and the result was undefined for arrays.\n\n\nVariable values for tokens encrypted with JWE are available only after decryption which occurs during the [Access](https://nginx.org/en/docs/dev/development_guide.html#http_phases) phase.\n",
     "c": "`http`",
     "s": "**auth_jwt_claim_set** `_$variable_` `_name_` ...;"
   },
@@ -1266,7 +1284,7 @@
   {
     "m": "ngx_http_auth_jwt_module",
     "n": "auth_jwt_key_request",
-    "d": "Allows retrieving a [JSON Web Key Set](https://tools.ietf.org/html/rfc7517#section-5) file from a subrequest for validating JWT signature and sets the URI where the subrequest will be sent to. To avoid validation overhead, it is recommended to cache the key file:\n```\nproxy_cache_path /data/nginx/cache levels=1 keys_zone=foo:10m;\n\nserver {\n    ...\n\n    location / {\n        auth_jwt             \"closed site\";\n        auth_jwt_key_request /jwks_uri;\n    }\n\n    location = /jwks_uri {\n        internal;\n        proxy_cache foo;\n        proxy_pass  http://idp.example.com/keys;\n    }\n}\n\n```\n",
+    "d": "Allows retrieving a [JSON Web Key Set](https://tools.ietf.org/html/rfc7517#section-5) file from a subrequest for validating JWT signature and sets the URI where the subrequest will be sent to. Parameter value can contain variables. To avoid validation overhead, it is recommended to cache the key file:\n```\nproxy_cache_path /data/nginx/cache levels=1 keys_zone=foo:10m;\n\nserver {\n    ...\n\n    location / {\n        auth_jwt             \"closed site\";\n        auth_jwt_key_request /jwks_uri;\n    }\n\n    location = /jwks_uri {\n        internal;\n        proxy_cache foo;\n        proxy_pass  http://idp.example.com/keys;\n    }\n}\n\n```\n",
     "c": "`http`, `server`, `location`, `limit_except`",
     "s": "**auth_jwt_key_request** `_uri_`;"
   },
@@ -1280,21 +1298,29 @@
   },
   {
     "m": "ngx_http_auth_jwt_module",
+    "n": "auth_jwt_type",
+    "d": "Specifies which type of JSON Web Token to expect: JWS (`signed`) or JWE (`encrypted`).",
+    "v": "auth\\_jwt\\_type signed;",
+    "c": "`http`, `server`, `location`, `limit_except`",
+    "s": "**auth_jwt_type** `_signed_` | `_encrypted_`;"
+  },
+  {
+    "m": "ngx_http_auth_jwt_module",
     "n": "variables",
-    "d": "#### Embedded Variables\nThe `ngx_http_auth_jwt_module` module supports embedded variables:\n\n`$jwt_header_``_name_`\n\nreturns the value of a specified [JOSE header](https://tools.ietf.org/html/rfc7515#section-4)\n\n`$jwt_claim_``_name_`\n\nreturns the value of a specified [JWT claim](https://tools.ietf.org/html/rfc7519#section-4)\n\nFor nested claims and claims including a dot (“.”), the value of the variable cannot be evaluated; the [auth\\_jwt\\_claim\\_set](https://nginx.org/en/docs/http/ngx_http_auth_jwt_module.html#auth_jwt_claim_set) directive should be used instead.\n",
-    "v": "auth\\_jwt\\_leeway 0s;",
-    "c": "`http`, `server`, `location`",
-    "s": "**auth_jwt_leeway** `_time_`;"
+    "d": "#### Embedded Variables\nThe `ngx_http_auth_jwt_module` module supports embedded variables:\n\n`$jwt_header_``_name_`\n\nreturns the value of a specified [JOSE header](https://tools.ietf.org/html/rfc7515#section-4)\n\n`$jwt_claim_``_name_`\n\nreturns the value of a specified [JWT claim](https://tools.ietf.org/html/rfc7519#section-4)\n\nFor nested claims and claims including a dot (“.”), the value of the variable cannot be evaluated; the [auth\\_jwt\\_claim\\_set](https://nginx.org/en/docs/http/ngx_http_auth_jwt_module.html#auth_jwt_claim_set) directive should be used instead.\n\nVariable values for tokens encrypted with JWE are available only after decryption which occurs during the [Access](https://nginx.org/en/docs/dev/development_guide.html#http_phases) phase.\n",
+    "v": "auth\\_jwt\\_type signed;",
+    "c": "`http`, `server`, `location`, `limit_except`",
+    "s": "**auth_jwt_type** `_signed_` | `_encrypted_`;"
   },
   {
     "m": "ngx_http_auth_jwt_module",
     "n": "$jwt_header_name",
-    "d": "returns the value of a specified [JWT claim](https://tools.ietf.org/html/rfc7519#section-4)\n\nFor nested claims and claims including a dot (“.”), the value of the variable cannot be evaluated; the [auth\\_jwt\\_claim\\_set](https://nginx.org/en/docs/http/ngx_http_auth_jwt_module.html#auth_jwt_claim_set) directive should be used instead."
+    "d": "returns the value of a specified [JWT claim](https://tools.ietf.org/html/rfc7519#section-4)\n\nFor nested claims and claims including a dot (“.”), the value of the variable cannot be evaluated; the [auth\\_jwt\\_claim\\_set](https://nginx.org/en/docs/http/ngx_http_auth_jwt_module.html#auth_jwt_claim_set) directive should be used instead.\n\nVariable values for tokens encrypted with JWE are available only after decryption which occurs during the [Access](https://nginx.org/en/docs/dev/development_guide.html#http_phases) phase."
   },
   {
     "m": "ngx_http_auth_jwt_module",
     "n": "$jwt_claim_name",
-    "d": "returns the value of a specified [JWT claim](https://tools.ietf.org/html/rfc7519#section-4)\n\nFor nested claims and claims including a dot (“.”), the value of the variable cannot be evaluated; the [auth\\_jwt\\_claim\\_set](https://nginx.org/en/docs/http/ngx_http_auth_jwt_module.html#auth_jwt_claim_set) directive should be used instead."
+    "d": "returns the value of a specified [JWT claim](https://tools.ietf.org/html/rfc7519#section-4)\n\nFor nested claims and claims including a dot (“.”), the value of the variable cannot be evaluated; the [auth\\_jwt\\_claim\\_set](https://nginx.org/en/docs/http/ngx_http_auth_jwt_module.html#auth_jwt_claim_set) directive should be used instead.\n\nVariable values for tokens encrypted with JWE are available only after decryption which occurs during the [Access](https://nginx.org/en/docs/dev/development_guide.html#http_phases) phase."
   },
   {
     "m": "ngx_http_auth_request_module",
@@ -2072,14 +2098,14 @@
   {
     "m": "ngx_http_grpc_module",
     "n": "grpc_ssl_certificate",
-    "d": "Specifies a `_file_` with the certificate in the PEM format used for authentication to a gRPC SSL server.",
+    "d": "Specifies a `_file_` with the certificate in the PEM format used for authentication to a gRPC SSL server.\nSince version 1.21.0, variables can be used in the `_file_` name.",
     "c": "`http`, `server`, `location`",
     "s": "**grpc_ssl_certificate** `_file_`;"
   },
   {
     "m": "ngx_http_grpc_module",
     "n": "grpc_ssl_certificate_key",
-    "d": "Specifies a `_file_` with the secret key in the PEM format used for authentication to a gRPC SSL server.\nThe value `engine`:`_name_`:`_id_` can be specified instead of the `_file_`, which loads a secret key with a specified `_id_` from the OpenSSL engine `_name_`.",
+    "d": "Specifies a `_file_` with the secret key in the PEM format used for authentication to a gRPC SSL server.\nThe value `engine`:`_name_`:`_id_` can be specified instead of the `_file_`, which loads a secret key with a specified `_id_` from the OpenSSL engine `_name_`.\nSince version 1.21.0, variables can be used in the `_file_` name.",
     "c": "`http`, `server`, `location`",
     "s": "**grpc_ssl_certificate_key** `_file_`;"
   },
@@ -2410,6 +2436,13 @@
   },
   {
     "m": "ngx_http_js_module",
+    "n": "js_body_filter",
+    "d": "Sets an njs function as a response body filter. The filter function is called for each data chunk of a response body with the following arguments:\n`r`\n\nthe [HTTP request](https://nginx.org/en/docs/njs/reference.html#http) object\n\n`data`\n\nthe incoming data chunk, may be a string or Buffer depending on the `buffer_type` value, by default is a string.\n\n`flags`\n\nan object with the following properties:\n\n`last`\n\na boolean value, true if data is a last buffer.\n\nThe filter function can pass its own modified version of the input data chunk to the next body filter by calling [`r.sendBuffer()`](https://nginx.org/en/docs/njs/reference.html#r_sendbuffer). For example, to transform all the lowercase letters in the response body:\n```\nfunction filter(r, data, flags) {\n    r.sendBuffer(data.toLowerCase(), flags);\n}\n\n```\nTo stop filtering (following data chunks will be passed to client without calling `js_body_filter`), [`r.done()`](https://nginx.org/en/docs/njs/reference.html#r_done) can be used.\nIf the filter function changes the length of the response body, then it is required to clear out the “Content-Length” response header (if any) in [`js_header_filter`](https://nginx.org/en/docs/http/ngx_http_js_module.html#js_header_filter) to enforce chunked transfer encoding.",
+    "c": "`location`, `limit_except`",
+    "s": "**js_body_filter** `_function_` | `_module.function_` [`_buffer_type_`=`_string_` | `_buffer_`];"
+  },
+  {
+    "m": "ngx_http_js_module",
     "n": "js_content",
     "d": "Sets an njs function as a location content handler. Since [0.4.0](https://nginx.org/en/docs/njs/changes.html#njs0.4.0), a module function can be referenced.",
     "c": "`location`, `limit_except`",
@@ -2425,7 +2458,7 @@
   {
     "m": "ngx_http_js_module",
     "n": "js_import",
-    "d": "Imports a module that implements location and variable handlers in njs. The `export_name` is used as a namespace to access module functions. If the `export_name` is not specified, the module name will be used as a namespace.\n```\njs_import http.js;\n\n```\nHere, the module name `http` is used as a namespace while accessing exports. If the imported module contains `foo()`, `http.foo` is used to refer to it.\nSeveral `js_import` directives can be specified.",
+    "d": "Imports a module that implements location and variable handlers in njs. The `export_name` is used as a namespace to access module functions. If the `export_name` is not specified, the module name will be used as a namespace.\n```\njs_import http.js;\n\n```\nHere, the module name `http` is used as a namespace while accessing exports. If the imported module exports `foo()`, `http.foo` is used to refer to it.\nSeveral `js_import` directives can be specified.",
     "c": "`http`",
     "s": "**js_import** `_module.js_` | `_export_name from module.js_`;"
   },
@@ -2446,16 +2479,23 @@
   {
     "m": "ngx_http_js_module",
     "n": "js_set",
-    "d": "Sets an njs function for the specified variable. Since [0.4.0](https://nginx.org/en/docs/njs/changes.html#njs0.4.0), a module function can be referenced.",
+    "d": "Sets an njs `function` for the specified `variable`. Since [0.4.0](https://nginx.org/en/docs/njs/changes.html#njs0.4.0), a module function can be referenced.\nThe function is called when the variable is referenced for the first time for a given request. The exact moment depends on a [phase](https://nginx.org/en/docs/dev/development_guide.html#http_phases) at which the variable is referenced. This can be used to perform some logic not related to variable evaluation. For example, if the variable is referenced only in the [log\\_format](https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format) directive, its handler will not be executed until the log phase. This handler can be used to do some cleanup right before the request is freed.",
     "c": "`http`",
     "s": "**js_set** `_$variable_` `_function_` | `_module.function_`;"
+  },
+  {
+    "m": "ngx_http_js_module",
+    "n": "js_var",
+    "d": "Declares a [writable](https://nginx.org/en/docs/njs/reference.html#r_variables) variable. The value can contain text, variables, and their combination. The variable is not overwritten after a redirect unlike variables created with the [set](https://nginx.org/en/docs/http/ngx_http_rewrite_module.html#set) directive.",
+    "c": "`http`",
+    "s": "**js_var** `_$variable_` [`_value_`];"
   },
   {
     "m": "ngx_http_js_module",
     "n": "arguments",
     "d": "#### Request Argument\nEach HTTP njs handler receives one argument, a request [object](https://nginx.org/en/docs/njs/reference.html#http).",
     "c": "`http`",
-    "s": "**js_set** `_$variable_` `_function_` | `_module.function_`;"
+    "s": "**js_var** `_$variable_` [`_value_`];"
   },
   {
     "m": "ngx_http_keyval_module",
@@ -3109,7 +3149,7 @@
   {
     "m": "ngx_http_proxy_module",
     "n": "proxy_cookie_flags",
-    "d": "Sets one or more flags for the cookie. The `_cookie_` can contain text, variables, and their combinations. The `secure`, `httponly`, `samesite=strict`, `samesite=lax`, `samesite=none` parameters add the corresponding flags. The `nosecure`, `nohttponly`, `nosamesite` parameters remove the corresponding flags.\nThe cookie can also be specified using regular expressions. In this case, `_cookie_` should start from the “`~`” symbol.\nSeveral `proxy_cookie_flags` directives can be specified on the same configuration level:\n```\nproxy_cookie_flags one httponly;\nproxy_cookie_flags ~ nosecure samesite=strict;\n\n```\nIf several directives can be applied to the cookie, the first matching directive will be chosen. In the example, the `httponly` flag is added to the cookie `one`, for all other cookies the `samesite=strict` flag is added and the `secure` flag is deleted.\nThe `off` parameter cancels the effect of the `proxy_cookie_flags` directives inherited from the previous configuration level.",
+    "d": "Sets one or more flags for the cookie. The `_cookie_` can contain text, variables, and their combinations. The `_flag_` can contain text, variables, and their combinations (1.19.8). The `secure`, `httponly`, `samesite=strict`, `samesite=lax`, `samesite=none` parameters add the corresponding flags. The `nosecure`, `nohttponly`, `nosamesite` parameters remove the corresponding flags.\nThe cookie can also be specified using regular expressions. In this case, `_cookie_` should start from the “`~`” symbol.\nSeveral `proxy_cookie_flags` directives can be specified on the same configuration level:\n```\nproxy_cookie_flags one httponly;\nproxy_cookie_flags ~ nosecure samesite=strict;\n\n```\nIf several directives can be applied to the cookie, the first matching directive will be chosen. In the example, the `httponly` flag is added to the cookie `one`, for all other cookies the `samesite=strict` flag is added and the `secure` flag is deleted.\nThe `off` parameter cancels the effect of the `proxy_cookie_flags` directives inherited from the previous configuration level.",
     "v": "proxy\\_cookie\\_flags off;",
     "c": "`http`, `server`, `location`",
     "s": "**proxy_cookie_flags** `off` | `_cookie_` [`_flag_` ...];"
@@ -3334,14 +3374,14 @@
   {
     "m": "ngx_http_proxy_module",
     "n": "proxy_ssl_certificate",
-    "d": "Specifies a `_file_` with the certificate in the PEM format used for authentication to a proxied HTTPS server.",
+    "d": "Specifies a `_file_` with the certificate in the PEM format used for authentication to a proxied HTTPS server.\nSince version 1.21.0, variables can be used in the `_file_` name.",
     "c": "`http`, `server`, `location`",
     "s": "**proxy_ssl_certificate** `_file_`;"
   },
   {
     "m": "ngx_http_proxy_module",
     "n": "proxy_ssl_certificate_key",
-    "d": "Specifies a `_file_` with the secret key in the PEM format used for authentication to a proxied HTTPS server.\nThe value `engine`:`_name_`:`_id_` can be specified instead of the `_file_` (1.7.9), which loads a secret key with a specified `_id_` from the OpenSSL engine `_name_`.",
+    "d": "Specifies a `_file_` with the secret key in the PEM format used for authentication to a proxied HTTPS server.\nThe value `engine`:`_name_`:`_id_` can be specified instead of the `_file_` (1.7.9), which loads a secret key with a specified `_id_` from the OpenSSL engine `_name_`.\nSince version 1.21.0, variables can be used in the `_file_` name.",
     "c": "`http`, `server`, `location`",
     "s": "**proxy_ssl_certificate_key** `_file_`;"
   },
@@ -4340,7 +4380,7 @@
   {
     "m": "ngx_http_ssl_module",
     "n": "ssl_reject_handshake",
-    "d": "If enabled, SSL handshakes in the [server](https://nginx.org/en/docs/http/ngx_http_core_module.html#server) block will be rejected.\nFor example, in the following configuration, SSL handshakes with server names other than `example.com` are rejected:\n```\nserver {\n    listen               443 ssl;\n    ssl_reject_handshake on;\n}\n\nserver {\n    listen              443 ssl;\n    server_name         example.com;\n    ssl_certificate     example.com.crt;\n    ssl_certificate_key example.com.key;\n}\n\n```\n",
+    "d": "If enabled, SSL handshakes in the [server](https://nginx.org/en/docs/http/ngx_http_core_module.html#server) block will be rejected.\nFor example, in the following configuration, SSL handshakes with server names other than `example.com` are rejected:\n```\nserver {\n    listen               443 ssl default_server;\n    ssl_reject_handshake on;\n}\n\nserver {\n    listen              443 ssl;\n    server_name         example.com;\n    ssl_certificate     example.com.crt;\n    ssl_certificate_key example.com.key;\n}\n\n```\n",
     "v": "ssl\\_reject\\_handshake off;",
     "c": "`http`, `server`",
     "s": "**ssl_reject_handshake** `on` | `off`;"
@@ -4710,10 +4750,18 @@
   {
     "m": "ngx_http_upstream_module",
     "n": "keepalive_requests",
-    "d": "Sets the maximum number of requests that can be served through one keepalive connection. After the maximum number of requests is made, the connection is closed.\nClosing connections periodically is necessary to free per-connection memory allocations. Therefore, using too high maximum number of requests could result in excessive memory usage and not recommended.",
-    "v": "keepalive\\_requests 100;",
+    "d": "Sets the maximum number of requests that can be served through one keepalive connection. After the maximum number of requests is made, the connection is closed.\nClosing connections periodically is necessary to free per-connection memory allocations. Therefore, using too high maximum number of requests could result in excessive memory usage and not recommended.\n\nPrior to version 1.19.10, the default value was 100.\n",
+    "v": "keepalive\\_requests 1000;",
     "c": "`upstream`",
     "s": "**keepalive_requests** `_number_`;"
+  },
+  {
+    "m": "ngx_http_upstream_module",
+    "n": "keepalive_time",
+    "d": "Limits the maximum time during which requests can be processed through one keepalive connection. After this time is reached, the connection is closed following the subsequent request processing.",
+    "v": "keepalive\\_time 1h;",
+    "c": "`upstream`",
+    "s": "**keepalive_time** `_time_`;"
   },
   {
     "m": "ngx_http_upstream_module",
@@ -4897,7 +4945,7 @@
   {
     "m": "ngx_http_upstream_hc_module",
     "n": "health_check",
-    "d": "Enables periodic health checks of the servers in a [group](https://nginx.org/en/docs/http/ngx_http_upstream_module.html#upstream) referenced in the surrounding location.\nThe following optional parameters are supported:\n`interval`\\=`_time_`\n\nsets the interval between two consecutive health checks, by default, 5 seconds.\n\n`jitter`\\=`_time_`\n\nsets the time within which each health check will be randomly delayed, by default, there is no delay.\n\n`fails`\\=`_number_`\n\nsets the number of consecutive failed health checks of a particular server after which this server will be considered unhealthy, by default, 1.\n\n`passes`\\=`_number_`\n\nsets the number of consecutive passed health checks of a particular server after which the server will be considered healthy, by default, 1.\n\n`uri`\\=`_uri_`\n\ndefines the URI used in health check requests, by default, “`/`”.\n\n`mandatory`\n\nsets the initial “checking” state for a server until the first health check is completed (1.11.7). Client requests are not passed to servers in the “checking” state. If the parameter is not specified, the server will be initially considered healthy.\n\n`match`\\=`_name_`\n\nspecifies the `match` block configuring the tests that a response should pass in order for a health check to pass. By default, the response should have status code 2xx or 3xx.\n\n`port`\\=`_number_`\n\ndefines the port used when connecting to a server to perform a health check (1.9.7). By default, equals the [server](https://nginx.org/en/docs/http/ngx_http_upstream_module.html#server) port.\n\n`type`\\=`grpc` \\[`grpc_service`\\=`_name_`\\] \\[`grpc_status`\\=`_code_`\\]\n\nenables periodic [health checks](https://github.com/grpc/grpc/blob/master/doc/health-checking.md#grpc-health-checking-protocol) of a gRPC server or a particular gRPC service specified with the optional `grpc_service` parameter (1.19.5). If the server does not support the gRPC Health Checking Protocol, the optional `grpc_status` parameter can be used to specify non-zero gRPC [status](https://github.com/grpc/grpc/blob/master/doc/statuscodes.md#status-codes-and-their-use-in-grpc) (for example, status code “`12`” / “`UNIMPLEMENTED`”) that will be treated as healthy:\n\n> health\\_check mandatory type=grpc grpc\\_status=12;\n\nThe `type`\\=`grpc` parameter must be specified after all other directive parameters, `grpc_service` and `grpc_status` must follow `type`\\=`grpc`. The parameter is not compatible with [`uri`](https://nginx.org/en/docs/http/ngx_http_upstream_hc_module.html#health_check_uri) or [`match`](https://nginx.org/en/docs/http/ngx_http_upstream_hc_module.html#health_check_match) parameters.\n",
+    "d": "Enables periodic health checks of the servers in a [group](https://nginx.org/en/docs/http/ngx_http_upstream_module.html#upstream) referenced in the surrounding location.\nThe following optional parameters are supported:\n`interval`\\=`_time_`\n\nsets the interval between two consecutive health checks, by default, 5 seconds.\n\n`jitter`\\=`_time_`\n\nsets the time within which each health check will be randomly delayed, by default, there is no delay.\n\n`fails`\\=`_number_`\n\nsets the number of consecutive failed health checks of a particular server after which this server will be considered unhealthy, by default, 1.\n\n`passes`\\=`_number_`\n\nsets the number of consecutive passed health checks of a particular server after which the server will be considered healthy, by default, 1.\n\n`uri`\\=`_uri_`\n\ndefines the URI used in health check requests, by default, “`/`”.\n\n`mandatory` \\[`persistent`\\]\n\nsets the initial “checking” state for a server until the first health check is completed (1.11.7). Client requests are not passed to servers in the “checking” state. If the parameter is not specified, the server will be initially considered healthy.\n\nThe `persistent` parameter (1.19.7) sets the initial “up” state for a server after reload if the server was considered healthy before reload.\n\n`match`\\=`_name_`\n\nspecifies the `match` block configuring the tests that a response should pass in order for a health check to pass. By default, the response should have status code 2xx or 3xx.\n\n`port`\\=`_number_`\n\ndefines the port used when connecting to a server to perform a health check (1.9.7). By default, equals the [server](https://nginx.org/en/docs/http/ngx_http_upstream_module.html#server) port.\n\n`type`\\=`grpc` \\[`grpc_service`\\=`_name_`\\] \\[`grpc_status`\\=`_code_`\\]\n\nenables periodic [health checks](https://github.com/grpc/grpc/blob/master/doc/health-checking.md#grpc-health-checking-protocol) of a gRPC server or a particular gRPC service specified with the optional `grpc_service` parameter (1.19.5). If the server does not support the gRPC Health Checking Protocol, the optional `grpc_status` parameter can be used to specify non-zero gRPC [status](https://github.com/grpc/grpc/blob/master/doc/statuscodes.md#status-codes-and-their-use-in-grpc) (for example, status code “`12`” / “`UNIMPLEMENTED`”) that will be treated as healthy:\n\n> health\\_check mandatory type=grpc grpc\\_status=12;\n\nThe `type`\\=`grpc` parameter must be specified after all other directive parameters, `grpc_service` and `grpc_status` must follow `type`\\=`grpc`. The parameter is not compatible with [`uri`](https://nginx.org/en/docs/http/ngx_http_upstream_hc_module.html#health_check_uri) or [`match`](https://nginx.org/en/docs/http/ngx_http_upstream_hc_module.html#health_check_match) parameters.\n",
     "c": "`location`",
     "s": "**health_check** [`_parameters_`];"
   },
@@ -5359,14 +5407,14 @@
   {
     "m": "ngx_http_uwsgi_module",
     "n": "uwsgi_ssl_certificate",
-    "d": "Specifies a `_file_` with the certificate in the PEM format used for authentication to a secured uwsgi server.",
+    "d": "Specifies a `_file_` with the certificate in the PEM format used for authentication to a secured uwsgi server.\nSince version 1.21.0, variables can be used in the `_file_` name.",
     "c": "`http`, `server`, `location`",
     "s": "**uwsgi_ssl_certificate** `_file_`;"
   },
   {
     "m": "ngx_http_uwsgi_module",
     "n": "uwsgi_ssl_certificate_key",
-    "d": "Specifies a `_file_` with the secret key in the PEM format used for authentication to a secured uwsgi server.\nThe value `engine`:`_name_`:`_id_` can be specified instead of the `_file_` (1.7.9), which loads a secret key with a specified `_id_` from the OpenSSL engine `_name_`.",
+    "d": "Specifies a `_file_` with the secret key in the PEM format used for authentication to a secured uwsgi server.\nThe value `engine`:`_name_`:`_id_` can be specified instead of the `_file_` (1.7.9), which loads a secret key with a specified `_id_` from the OpenSSL engine `_name_`.\nSince version 1.21.0, variables can be used in the `_file_` name.",
     "c": "`http`, `server`, `location`",
     "s": "**uwsgi_ssl_certificate_key** `_file_`;"
   },
@@ -5510,7 +5558,7 @@
   {
     "m": "ngx_http_v2_module",
     "n": "http2_idle_timeout",
-    "d": "Sets the timeout of inactivity after which the connection is closed.",
+    "d": "\nThis directive is obsolete since version 1.19.7. The [keepalive\\_timeout](https://nginx.org/en/docs/http/ngx_http_core_module.html#keepalive_timeout) directive should be used instead.\n\nSets the timeout of inactivity after which the connection is closed.",
     "v": "http2\\_idle\\_timeout 3m;",
     "c": "`http`, `server`",
     "s": "**http2_idle_timeout** `_time_`;"
@@ -5534,7 +5582,7 @@
   {
     "m": "ngx_http_v2_module",
     "n": "http2_max_field_size",
-    "d": "Limits the maximum size of an [HPACK](https://tools.ietf.org/html/rfc7541)\\-compressed request header field. The limit applies equally to both name and value. Note that if Huffman encoding is applied, the actual size of decompressed name and value strings may be larger. For most requests, the default limit should be enough.",
+    "d": "\nThis directive is obsolete since version 1.19.7. The [large\\_client\\_header\\_buffers](https://nginx.org/en/docs/http/ngx_http_core_module.html#large_client_header_buffers) directive should be used instead.\n\nLimits the maximum size of an [HPACK](https://tools.ietf.org/html/rfc7541)\\-compressed request header field. The limit applies equally to both name and value. Note that if Huffman encoding is applied, the actual size of decompressed name and value strings may be larger. For most requests, the default limit should be enough.",
     "v": "http2\\_max\\_field\\_size 4k;",
     "c": "`http`, `server`",
     "s": "**http2_max_field_size** `_size_`;"
@@ -5542,7 +5590,7 @@
   {
     "m": "ngx_http_v2_module",
     "n": "http2_max_header_size",
-    "d": "Limits the maximum size of the entire request header list after [HPACK](https://tools.ietf.org/html/rfc7541) decompression. For most requests, the default limit should be enough.",
+    "d": "\nThis directive is obsolete since version 1.19.7. The [large\\_client\\_header\\_buffers](https://nginx.org/en/docs/http/ngx_http_core_module.html#large_client_header_buffers) directive should be used instead.\n\nLimits the maximum size of the entire request header list after [HPACK](https://tools.ietf.org/html/rfc7541) decompression. For most requests, the default limit should be enough.",
     "v": "http2\\_max\\_header\\_size 16k;",
     "c": "`http`, `server`",
     "s": "**http2_max_header_size** `_size_`;"
@@ -5550,7 +5598,7 @@
   {
     "m": "ngx_http_v2_module",
     "n": "http2_max_requests",
-    "d": "Sets the maximum number of requests (including [push](https://nginx.org/en/docs/http/ngx_http_v2_module.html#http2_push) requests) that can be served through one HTTP/2 connection, after which the next client request will lead to connection closing and the need of establishing a new connection.\nClosing connections periodically is necessary to free per-connection memory allocations. Therefore, using too high maximum number of requests could result in excessive memory usage and not recommended.",
+    "d": "\nThis directive is obsolete since version 1.19.7. The [keepalive\\_requests](https://nginx.org/en/docs/http/ngx_http_core_module.html#keepalive_requests) directive should be used instead.\n\nSets the maximum number of requests (including [push](https://nginx.org/en/docs/http/ngx_http_v2_module.html#http2_push) requests) that can be served through one HTTP/2 connection, after which the next client request will lead to connection closing and the need of establishing a new connection.\nClosing connections periodically is necessary to free per-connection memory allocations. Therefore, using too high maximum number of requests could result in excessive memory usage and not recommended.",
     "v": "http2\\_max\\_requests 1000;",
     "c": "`http`, `server`",
     "s": "**http2_max_requests** `_number_`;"
@@ -5582,7 +5630,7 @@
   {
     "m": "ngx_http_v2_module",
     "n": "http2_recv_timeout",
-    "d": "Sets the timeout for expecting more data from the client, after which the connection is closed.",
+    "d": "\nThis directive is obsolete since version 1.19.7. The [client\\_header\\_timeout](https://nginx.org/en/docs/http/ngx_http_core_module.html#client_header_timeout) directive should be used instead.\n\nSets the timeout for expecting more data from the client, after which the connection is closed.",
     "v": "http2\\_recv\\_timeout 30s;",
     "c": "`http`, `server`",
     "s": "**http2_recv_timeout** `_time_`;"
@@ -5642,9 +5690,16 @@
   {
     "m": "ngx_mail_core_module",
     "n": "listen",
-    "d": "Sets the `_address_` and `_port_` for the socket on which the server will accept requests. It is possible to specify just the port. The address can also be a hostname, for example:\n```\nlisten 127.0.0.1:110;\nlisten *:110;\nlisten 110;     # same as *:110\nlisten localhost:110;\n\n```\nIPv6 addresses (0.7.58) are specified in square brackets:\n```\nlisten [::1]:110;\nlisten [::]:110;\n\n```\nUNIX-domain sockets (1.3.5) are specified with the “`unix:`” prefix:\n```\nlisten unix:/var/run/nginx.sock;\n\n```\n\nDifferent servers must listen on different `_address_`:`_port_` pairs.\nThe `ssl` parameter allows specifying that all connections accepted on this port should work in SSL mode.\nThe `listen` directive can have several additional parameters specific to socket-related system calls.\n`backlog`\\=`_number_`\n\nsets the `backlog` parameter in the `listen()` call that limits the maximum length for the queue of pending connections (1.9.2). By default, `backlog` is set to -1 on FreeBSD, DragonFly BSD, and macOS, and to 511 on other platforms.\n\n`rcvbuf`\\=`_size_`\n\nsets the receive buffer size (the `SO_RCVBUF` option) for the listening socket (1.11.13).\n\n`sndbuf`\\=`_size_`\n\nsets the send buffer size (the `SO_SNDBUF` option) for the listening socket (1.11.13).\n\n`bind`\n\nthis parameter instructs to make a separate `bind()` call for a given address:port pair. The fact is that if there are several `listen` directives with the same port but different addresses, and one of the `listen` directives listens on all addresses for the given port (`*:``_port_`), nginx will `bind()` only to `*:``_port_`. It should be noted that the `getsockname()` system call will be made in this case to determine the address that accepted the connection. If the `ipv6only` or `so_keepalive` parameters are used then for a given `_address_`:`_port_` pair a separate `bind()` call will always be made.\n\n`ipv6only`\\=`on`|`off`\n\nthis parameter determines (via the `IPV6_V6ONLY` socket option) whether an IPv6 socket listening on a wildcard address `[::]` will accept only IPv6 connections or both IPv6 and IPv4 connections. This parameter is turned on by default. It can only be set once on start.\n\n`so_keepalive`\\=`on`|`off`|\\[`_keepidle_`\\]:\\[`_keepintvl_`\\]:\\[`_keepcnt_`\\]\n\nthis parameter configures the “TCP keepalive” behavior for the listening socket. If this parameter is omitted then the operating system’s settings will be in effect for the socket. If it is set to the value “`on`”, the `SO_KEEPALIVE` option is turned on for the socket. If it is set to the value “`off`”, the `SO_KEEPALIVE` option is turned off for the socket. Some operating systems support setting of TCP keepalive parameters on a per-socket basis using the `TCP_KEEPIDLE`, `TCP_KEEPINTVL`, and `TCP_KEEPCNT` socket options. On such systems (currently, Linux 2.4+, NetBSD 5+, and FreeBSD 9.0-STABLE), they can be configured using the `_keepidle_`, `_keepintvl_`, and `_keepcnt_` parameters. One or two parameters may be omitted, in which case the system default setting for the corresponding socket option will be in effect. For example,\n\n> so\\_keepalive=30m::10\n\nwill set the idle timeout (`TCP_KEEPIDLE`) to 30 minutes, leave the probe interval (`TCP_KEEPINTVL`) at its system default, and set the probes count (`TCP_KEEPCNT`) to 10 probes.\n",
+    "d": "Sets the `_address_` and `_port_` for the socket on which the server will accept requests. It is possible to specify just the port. The address can also be a hostname, for example:\n```\nlisten 127.0.0.1:110;\nlisten *:110;\nlisten 110;     # same as *:110\nlisten localhost:110;\n\n```\nIPv6 addresses (0.7.58) are specified in square brackets:\n```\nlisten [::1]:110;\nlisten [::]:110;\n\n```\nUNIX-domain sockets (1.3.5) are specified with the “`unix:`” prefix:\n```\nlisten unix:/var/run/nginx.sock;\n\n```\n\nDifferent servers must listen on different `_address_`:`_port_` pairs.\nThe `ssl` parameter allows specifying that all connections accepted on this port should work in SSL mode.",
     "c": "`server`",
-    "s": "**listen** `_address_`:`_port_` [`ssl`] [`backlog`=`_number_`] [`rcvbuf`=`_size_`] [`sndbuf`=`_size_`] [`bind`] [`ipv6only`=`on`|`off`] [`so_keepalive`=`on`|`off`|[`_keepidle_`]:[`_keepintvl_`]:[`_keepcnt_`]];"
+    "s": "**listen** `_address_`:`_port_` [`ssl`] [`proxy_protocol`] [`backlog`=`_number_`] [`rcvbuf`=`_size_`] [`sndbuf`=`_size_`] [`bind`] [`ipv6only`=`on`|`off`] [`so_keepalive`=`on`|`off`|[`_keepidle_`]:[`_keepintvl_`]:[`_keepcnt_`]];"
+  },
+  {
+    "m": "ngx_mail_core_module",
+    "n": "proxy_protocol",
+    "d": "The `proxy_protocol` parameter (1.19.8) allows specifying that all connections accepted on this port should use the [PROXY protocol](http://www.haproxy.org/download/1.5/doc/proxy-protocol.txt). Obtained information is passed to the [authentication server](https://nginx.org/en/docs/mail/ngx_mail_auth_http_module.html#proxy_protocol) and can be used to [change the client address](https://nginx.org/en/docs/mail/ngx_mail_realip_module.html).\nThe `listen` directive can have several additional parameters specific to socket-related system calls.\n`backlog`\\=`_number_`\n\nsets the `backlog` parameter in the `listen()` call that limits the maximum length for the queue of pending connections (1.9.2). By default, `backlog` is set to -1 on FreeBSD, DragonFly BSD, and macOS, and to 511 on other platforms.\n\n`rcvbuf`\\=`_size_`\n\nsets the receive buffer size (the `SO_RCVBUF` option) for the listening socket (1.11.13).\n\n`sndbuf`\\=`_size_`\n\nsets the send buffer size (the `SO_SNDBUF` option) for the listening socket (1.11.13).\n\n`bind`\n\nthis parameter instructs to make a separate `bind()` call for a given address:port pair. The fact is that if there are several `listen` directives with the same port but different addresses, and one of the `listen` directives listens on all addresses for the given port (`*:``_port_`), nginx will `bind()` only to `*:``_port_`. It should be noted that the `getsockname()` system call will be made in this case to determine the address that accepted the connection. If the `backlog`, `rcvbuf`, `sndbuf`, `ipv6only`, or `so_keepalive` parameters are used then for a given `_address_`:`_port_` pair a separate `bind()` call will always be made.\n\n`ipv6only`\\=`on`|`off`\n\nthis parameter determines (via the `IPV6_V6ONLY` socket option) whether an IPv6 socket listening on a wildcard address `[::]` will accept only IPv6 connections or both IPv6 and IPv4 connections. This parameter is turned on by default. It can only be set once on start.\n\n`so_keepalive`\\=`on`|`off`|\\[`_keepidle_`\\]:\\[`_keepintvl_`\\]:\\[`_keepcnt_`\\]\n\nthis parameter configures the “TCP keepalive” behavior for the listening socket. If this parameter is omitted then the operating system’s settings will be in effect for the socket. If it is set to the value “`on`”, the `SO_KEEPALIVE` option is turned on for the socket. If it is set to the value “`off`”, the `SO_KEEPALIVE` option is turned off for the socket. Some operating systems support setting of TCP keepalive parameters on a per-socket basis using the `TCP_KEEPIDLE`, `TCP_KEEPINTVL`, and `TCP_KEEPCNT` socket options. On such systems (currently, Linux 2.4+, NetBSD 5+, and FreeBSD 9.0-STABLE), they can be configured using the `_keepidle_`, `_keepintvl_`, and `_keepcnt_` parameters. One or two parameters may be omitted, in which case the system default setting for the corresponding socket option will be in effect. For example,\n\n> so\\_keepalive=30m::10\n\nwill set the idle timeout (`TCP_KEEPIDLE`) to 30 minutes, leave the probe interval (`TCP_KEEPINTVL`) at its system default, and set the probes count (`TCP_KEEPCNT`) to 10 probes.\n",
+    "c": "`server`",
+    "s": "**listen** `_address_`:`_port_` [`ssl`] [`proxy_protocol`] [`backlog`=`_number_`] [`rcvbuf`=`_size_`] [`sndbuf`=`_size_`] [`bind`] [`ipv6only`=`on`|`off`] [`so_keepalive`=`on`|`off`|[`_keepidle_`]:[`_keepintvl_`]:[`_keepcnt_`]];"
   },
   {
     "m": "ngx_mail_core_module",
@@ -5652,6 +5707,14 @@
     "d": "Provides the configuration file context in which the mail server directives are specified.",
     "c": "`main`",
     "s": "**mail** { ... }"
+  },
+  {
+    "m": "ngx_mail_core_module",
+    "n": "max_errors",
+    "d": "Sets the number of protocol errors after which the connection is closed.",
+    "v": "max\\_errors 5;",
+    "c": "`mail`, `server`",
+    "s": "**max_errors** `_number_`;"
   },
   {
     "m": "ngx_mail_core_module",
@@ -5770,6 +5833,14 @@
     "s": "**auth_http_timeout** `_time_`;"
   },
   {
+    "m": "ngx_mail_auth_http_module",
+    "n": "proxy_protocol",
+    "d": "When the [PROXY protocol](https://nginx.org/en/docs/mail/ngx_mail_core_module.html#proxy_protocol) is used, its details are passed in the following request headers: “Proxy-Protocol-Addr”, “Proxy-Protocol-Port”, “Proxy-Protocol-Server-Addr”, and “Proxy-Protocol-Server-Port” (1.19.8).",
+    "v": "auth\\_http\\_timeout 60s;",
+    "c": "`mail`, `server`",
+    "s": "**auth_http_timeout** `_time_`;"
+  },
+  {
     "m": "ngx_mail_proxy_module",
     "n": "proxy_buffer",
     "d": "Sets the size of the buffer used for proxying. By default, the buffer size is equal to one memory page. Depending on a platform, it is either 4K or 8K.",
@@ -5784,6 +5855,14 @@
     "v": "proxy\\_pass\\_error\\_message off;",
     "c": "`mail`, `server`",
     "s": "**proxy_pass_error_message** `on` | `off`;"
+  },
+  {
+    "m": "ngx_mail_proxy_module",
+    "n": "proxy_protocol",
+    "d": "Enables the [PROXY protocol](http://www.haproxy.org/download/1.5/doc/proxy-protocol.txt) for connections to a backend.",
+    "v": "proxy\\_protocol off;",
+    "c": "`mail`, `server`",
+    "s": "**proxy_protocol** `on` | `off`;"
   },
   {
     "m": "ngx_mail_proxy_module",
@@ -6050,28 +6129,28 @@
     "n": "listen",
     "d": "Sets the `_address_` and `_port_` for the socket on which the server will accept connections. It is possible to specify just the port. The address can also be a hostname, for example:\n```\nlisten 127.0.0.1:12345;\nlisten *:12345;\nlisten 12345;     # same as *:12345\nlisten localhost:12345;\n\n```\nIPv6 addresses are specified in square brackets:\n```\nlisten [::1]:12345;\nlisten [::]:12345;\n\n```\nUNIX-domain sockets are specified with the “`unix:`” prefix:\n```\nlisten unix:/var/run/nginx.sock;\n\n```\n",
     "c": "`server`",
-    "s": "**listen** `_address_`:`_port_` [`ssl`] [`udp`] [`proxy_protocol`] [`backlog`=`_number_`] [`rcvbuf`=`_size_`] [`sndbuf`=`_size_`] [`bind`] [`ipv6only`=`on`|`off`] [`reuseport`] [`so_keepalive`=`on`|`off`|[`_keepidle_`]:[`_keepintvl_`]:[`_keepcnt_`]];"
+    "s": "**listen** `_address_`:`_port_` [`ssl`] [`udp`] [`proxy_protocol`] [`fastopen`=`_number_`] [`backlog`=`_number_`] [`rcvbuf`=`_size_`] [`sndbuf`=`_size_`] [`bind`] [`ipv6only`=`on`|`off`] [`reuseport`] [`so_keepalive`=`on`|`off`|[`_keepidle_`]:[`_keepintvl_`]:[`_keepcnt_`]];"
   },
   {
     "m": "ngx_stream_core_module",
     "n": "listen_port_range",
     "d": "Port ranges (1.15.10) are specified with the first and last port separated by a hyphen:\n```\nlisten 127.0.0.1:12345-12399;\nlisten 12345-12399;\n\n```\n\nThe `ssl` parameter allows specifying that all connections accepted on this port should work in SSL mode.",
     "c": "`server`",
-    "s": "**listen** `_address_`:`_port_` [`ssl`] [`udp`] [`proxy_protocol`] [`backlog`=`_number_`] [`rcvbuf`=`_size_`] [`sndbuf`=`_size_`] [`bind`] [`ipv6only`=`on`|`off`] [`reuseport`] [`so_keepalive`=`on`|`off`|[`_keepidle_`]:[`_keepintvl_`]:[`_keepcnt_`]];"
+    "s": "**listen** `_address_`:`_port_` [`ssl`] [`udp`] [`proxy_protocol`] [`fastopen`=`_number_`] [`backlog`=`_number_`] [`rcvbuf`=`_size_`] [`sndbuf`=`_size_`] [`bind`] [`ipv6only`=`on`|`off`] [`reuseport`] [`so_keepalive`=`on`|`off`|[`_keepidle_`]:[`_keepintvl_`]:[`_keepcnt_`]];"
   },
   {
     "m": "ngx_stream_core_module",
     "n": "udp",
     "d": "The `udp` parameter configures a listening socket for working with datagrams (1.9.13). In order to handle packets from the same address and port in the same session, the [`reuseport`](https://nginx.org/en/docs/stream/ngx_stream_core_module.html#reuseport) parameter should also be specified.",
     "c": "`server`",
-    "s": "**listen** `_address_`:`_port_` [`ssl`] [`udp`] [`proxy_protocol`] [`backlog`=`_number_`] [`rcvbuf`=`_size_`] [`sndbuf`=`_size_`] [`bind`] [`ipv6only`=`on`|`off`] [`reuseport`] [`so_keepalive`=`on`|`off`|[`_keepidle_`]:[`_keepintvl_`]:[`_keepcnt_`]];"
+    "s": "**listen** `_address_`:`_port_` [`ssl`] [`udp`] [`proxy_protocol`] [`fastopen`=`_number_`] [`backlog`=`_number_`] [`rcvbuf`=`_size_`] [`sndbuf`=`_size_`] [`bind`] [`ipv6only`=`on`|`off`] [`reuseport`] [`so_keepalive`=`on`|`off`|[`_keepidle_`]:[`_keepintvl_`]:[`_keepcnt_`]];"
   },
   {
     "m": "ngx_stream_core_module",
     "n": "proxy_protocol",
-    "d": "The `proxy_protocol` parameter (1.11.4) allows specifying that all connections accepted on this port should use the [PROXY protocol](http://www.haproxy.org/download/1.5/doc/proxy-protocol.txt).\nThe PROXY protocol version 2 is supported since version 1.13.11.\n\nThe `listen` directive can have several additional parameters specific to socket-related system calls.\n`backlog`\\=`_number_`\n\nsets the `backlog` parameter in the `listen()` call that limits the maximum length for the queue of pending connections (1.9.2). By default, `backlog` is set to -1 on FreeBSD, DragonFly BSD, and macOS, and to 511 on other platforms.\n\n`rcvbuf`\\=`_size_`\n\nsets the receive buffer size (the `SO_RCVBUF` option) for the listening socket (1.11.13).\n\n`sndbuf`\\=`_size_`\n\nsets the send buffer size (the `SO_SNDBUF` option) for the listening socket (1.11.13).\n\n`bind`\n\nthis parameter instructs to make a separate `bind()` call for a given address:port pair. The fact is that if there are several `listen` directives with the same port but different addresses, and one of the `listen` directives listens on all addresses for the given port (`*:``_port_`), nginx will `bind()` only to `*:``_port_`. It should be noted that the `getsockname()` system call will be made in this case to determine the address that accepted the connection. If the `ipv6only` or `so_keepalive` parameters are used then for a given `_address_`:`_port_` pair a separate `bind()` call will always be made.\n\n`ipv6only`\\=`on`|`off`\n\nthis parameter determines (via the `IPV6_V6ONLY` socket option) whether an IPv6 socket listening on a wildcard address `[::]` will accept only IPv6 connections or both IPv6 and IPv4 connections. This parameter is turned on by default. It can only be set once on start.\n\n`reuseport`\n\nthis parameter (1.9.1) instructs to create an individual listening socket for each worker process (using the `SO_REUSEPORT` socket option on Linux 3.9+ and DragonFly BSD, or `SO_REUSEPORT_LB` on FreeBSD 12+), allowing a kernel to distribute incoming connections between worker processes. This currently works only on Linux 3.9+, DragonFly BSD, and FreeBSD 12+ (1.15.1).\n\n> Inappropriate use of this option may have its security [implications](http://man7.org/linux/man-pages/man7/socket.7.html).\n\n`so_keepalive`\\=`on`|`off`|\\[`_keepidle_`\\]:\\[`_keepintvl_`\\]:\\[`_keepcnt_`\\]\n\nthis parameter configures the “TCP keepalive” behavior for the listening socket. If this parameter is omitted then the operating system’s settings will be in effect for the socket. If it is set to the value “`on`”, the `SO_KEEPALIVE` option is turned on for the socket. If it is set to the value “`off`”, the `SO_KEEPALIVE` option is turned off for the socket. Some operating systems support setting of TCP keepalive parameters on a per-socket basis using the `TCP_KEEPIDLE`, `TCP_KEEPINTVL`, and `TCP_KEEPCNT` socket options. On such systems (currently, Linux 2.4+, NetBSD 5+, and FreeBSD 9.0-STABLE), they can be configured using the `_keepidle_`, `_keepintvl_`, and `_keepcnt_` parameters. One or two parameters may be omitted, in which case the system default setting for the corresponding socket option will be in effect. For example,\n\n> so\\_keepalive=30m::10\n\nwill set the idle timeout (`TCP_KEEPIDLE`) to 30 minutes, leave the probe interval (`TCP_KEEPINTVL`) at its system default, and set the probes count (`TCP_KEEPCNT`) to 10 probes.\n\nDifferent servers must listen on different `_address_`:`_port_` pairs.",
+    "d": "The `proxy_protocol` parameter (1.11.4) allows specifying that all connections accepted on this port should use the [PROXY protocol](http://www.haproxy.org/download/1.5/doc/proxy-protocol.txt).\nThe PROXY protocol version 2 is supported since version 1.13.11.\n\nThe `listen` directive can have several additional parameters specific to socket-related system calls.\n`fastopen`\\=`_number_`\n\nenables “[TCP Fast Open](http://en.wikipedia.org/wiki/TCP_Fast_Open)” for the listening socket (1.21.0) and [limits](https://tools.ietf.org/html/rfc7413#section-5.1) the maximum length for the queue of connections that have not yet completed the three-way handshake.\n\n> Do not enable this feature unless the server can handle receiving the [same SYN packet with data](https://tools.ietf.org/html/rfc7413#section-6.1) more than once.\n\n`backlog`\\=`_number_`\n\nsets the `backlog` parameter in the `listen()` call that limits the maximum length for the queue of pending connections (1.9.2). By default, `backlog` is set to -1 on FreeBSD, DragonFly BSD, and macOS, and to 511 on other platforms.\n\n`rcvbuf`\\=`_size_`\n\nsets the receive buffer size (the `SO_RCVBUF` option) for the listening socket (1.11.13).\n\n`sndbuf`\\=`_size_`\n\nsets the send buffer size (the `SO_SNDBUF` option) for the listening socket (1.11.13).\n\n`bind`\n\nthis parameter instructs to make a separate `bind()` call for a given address:port pair. The fact is that if there are several `listen` directives with the same port but different addresses, and one of the `listen` directives listens on all addresses for the given port (`*:``_port_`), nginx will `bind()` only to `*:``_port_`. It should be noted that the `getsockname()` system call will be made in this case to determine the address that accepted the connection. If the `backlog`, `rcvbuf`, `sndbuf`, `ipv6only`, `reuseport`, or `so_keepalive` parameters are used then for a given `_address_`:`_port_` pair a separate `bind()` call will always be made.\n\n`ipv6only`\\=`on`|`off`\n\nthis parameter determines (via the `IPV6_V6ONLY` socket option) whether an IPv6 socket listening on a wildcard address `[::]` will accept only IPv6 connections or both IPv6 and IPv4 connections. This parameter is turned on by default. It can only be set once on start.\n\n`reuseport`\n\nthis parameter (1.9.1) instructs to create an individual listening socket for each worker process (using the `SO_REUSEPORT` socket option on Linux 3.9+ and DragonFly BSD, or `SO_REUSEPORT_LB` on FreeBSD 12+), allowing a kernel to distribute incoming connections between worker processes. This currently works only on Linux 3.9+, DragonFly BSD, and FreeBSD 12+ (1.15.1).\n\n> Inappropriate use of this option may have its security [implications](http://man7.org/linux/man-pages/man7/socket.7.html).\n\n`so_keepalive`\\=`on`|`off`|\\[`_keepidle_`\\]:\\[`_keepintvl_`\\]:\\[`_keepcnt_`\\]\n\nthis parameter configures the “TCP keepalive” behavior for the listening socket. If this parameter is omitted then the operating system’s settings will be in effect for the socket. If it is set to the value “`on`”, the `SO_KEEPALIVE` option is turned on for the socket. If it is set to the value “`off`”, the `SO_KEEPALIVE` option is turned off for the socket. Some operating systems support setting of TCP keepalive parameters on a per-socket basis using the `TCP_KEEPIDLE`, `TCP_KEEPINTVL`, and `TCP_KEEPCNT` socket options. On such systems (currently, Linux 2.4+, NetBSD 5+, and FreeBSD 9.0-STABLE), they can be configured using the `_keepidle_`, `_keepintvl_`, and `_keepcnt_` parameters. One or two parameters may be omitted, in which case the system default setting for the corresponding socket option will be in effect. For example,\n\n> so\\_keepalive=30m::10\n\nwill set the idle timeout (`TCP_KEEPIDLE`) to 30 minutes, leave the probe interval (`TCP_KEEPINTVL`) at its system default, and set the probes count (`TCP_KEEPCNT`) to 10 probes.\n\nDifferent servers must listen on different `_address_`:`_port_` pairs.",
     "c": "`server`",
-    "s": "**listen** `_address_`:`_port_` [`ssl`] [`udp`] [`proxy_protocol`] [`backlog`=`_number_`] [`rcvbuf`=`_size_`] [`sndbuf`=`_size_`] [`bind`] [`ipv6only`=`on`|`off`] [`reuseport`] [`so_keepalive`=`on`|`off`|[`_keepidle_`]:[`_keepintvl_`]:[`_keepcnt_`]];"
+    "s": "**listen** `_address_`:`_port_` [`ssl`] [`udp`] [`proxy_protocol`] [`fastopen`=`_number_`] [`backlog`=`_number_`] [`rcvbuf`=`_size_`] [`sndbuf`=`_size_`] [`bind`] [`ipv6only`=`on`|`off`] [`reuseport`] [`so_keepalive`=`on`|`off`|[`_keepidle_`]:[`_keepintvl_`]:[`_keepcnt_`]];"
   },
   {
     "m": "ngx_stream_core_module",
@@ -6343,7 +6422,7 @@
   {
     "m": "ngx_stream_js_module",
     "n": "js_import",
-    "d": "Imports a module that implements location and variable handlers in njs. The `export_name` is used as a namespace to access module functions. If the `export_name` is not specified, the module name will be used as a namespace.\n```\njs_import stream.js;\n\n```\nHere, the module name `stream` is used as a namespace while accessing exports. If the imported module contains `foo()`, `stream.foo` is used to refer to it.\nSeveral `js_import` directives can be specified.",
+    "d": "Imports a module that implements location and variable handlers in njs. The `export_name` is used as a namespace to access module functions. If the `export_name` is not specified, the module name will be used as a namespace.\n```\njs_import stream.js;\n\n```\nHere, the module name `stream` is used as a namespace while accessing exports. If the imported module exports `foo()`, `stream.foo` is used to refer to it.\nSeveral `js_import` directives can be specified.",
     "c": "`stream`",
     "s": "**js_import** `_module.js_` | `_export_name from module.js_`;"
   },
@@ -6371,16 +6450,23 @@
   {
     "m": "ngx_stream_js_module",
     "n": "js_set",
-    "d": "Sets an njs function for the specified variable. Since [0.4.0](https://nginx.org/en/docs/njs/changes.html#njs0.4.0), a module function can be referenced.",
+    "d": "Sets an njs `function` for the specified `variable`. Since [0.4.0](https://nginx.org/en/docs/njs/changes.html#njs0.4.0), a module function can be referenced.\nThe function is called when the variable is referenced for the first time for a given request. The exact moment depends on a [phase](https://nginx.org/en/docs/stream/stream_processing.html) at which the variable is referenced. This can be used to perform some logic not related to variable evaluation. For example, if the variable is referenced only in the [log\\_format](https://nginx.org/en/docs/stream/ngx_stream_log_module.html#log_format) directive, its handler will not be executed until the log phase. This handler can be used to do some cleanup right before the request is freed.",
     "c": "`stream`",
     "s": "**js_set** `_$variable_` `_function_` | `_module.function_`;"
+  },
+  {
+    "m": "ngx_stream_js_module",
+    "n": "js_var",
+    "d": "Declares a [writable](https://nginx.org/en/docs/njs/reference.html#r_variables) variable. The value can contain text, variables, and their combination.",
+    "c": "`stream`",
+    "s": "**js_var** `_$variable_` [`_value_`];"
   },
   {
     "m": "ngx_stream_js_module",
     "n": "properties",
     "d": "#### Session Object Properties\nEach stream njs handler receives one argument, a stream session [object](https://nginx.org/en/docs/njs/reference.html#stream).",
     "c": "`stream`",
-    "s": "**js_set** `_$variable_` `_function_` | `_module.function_`;"
+    "s": "**js_var** `_$variable_` [`_value_`];"
   },
   {
     "m": "ngx_stream_keyval_module",
@@ -6652,14 +6738,14 @@
   {
     "m": "ngx_stream_proxy_module",
     "n": "proxy_ssl_certificate",
-    "d": "Specifies a `_file_` with the certificate in the PEM format used for authentication to a proxied server.",
+    "d": "Specifies a `_file_` with the certificate in the PEM format used for authentication to a proxied server.\nSince version 1.21.0, variables can be used in the `_file_` name.",
     "c": "`stream`, `server`",
     "s": "**proxy_ssl_certificate** `_file_`;"
   },
   {
     "m": "ngx_stream_proxy_module",
     "n": "proxy_ssl_certificate_key",
-    "d": "Specifies a `_file_` with the secret key in the PEM format used for authentication to a proxied server.",
+    "d": "Specifies a `_file_` with the secret key in the PEM format used for authentication to a proxied server.\nSince version 1.21.0, variables can be used in the `_file_` name.",
     "c": "`stream`, `server`",
     "s": "**proxy_ssl_certificate_key** `_file_`;"
   },

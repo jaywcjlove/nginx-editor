@@ -60,9 +60,9 @@ import * as monaco from 'monaco-editor';
 import 'monaco-editor-nginx';
 
 monaco.editor.create(document.getElementById("container"), {
-	theme: 'nginx-theme',
-	value: getCode(),
-	language: 'nginx'
+  theme: 'nginx-theme',
+  value: 'nginx code.....',
+  language: 'nginx'
 });
 ```
 

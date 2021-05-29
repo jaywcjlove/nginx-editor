@@ -70,7 +70,7 @@ async function getData(url: string) {
         d: [],
       };
       let variablesElm: Element = undefined;
-      childs.map((idx, child) => {
+      childs.each((idx, child) => {
         if (child.attribs.name && child.tagName === 'a') {
           result.push({ ...resultItem });
           resultItem.n = child.attribs.name;
@@ -100,7 +100,7 @@ async function getData(url: string) {
       });
       $(variablesElm)
         .children()
-        .map((idx, child) => {
+        .each((_, child) => {
           if (child.tagName === 'dt' && child.attribs.id) {
             result.push({
               m: module,

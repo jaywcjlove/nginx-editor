@@ -42,9 +42,6 @@ const App: React.FC = () => {
         language="nginx"
         value={content}
         height="calc(100vh - 36px)"
-        options={{
-          theme: 'vs-dark',
-        }}
       />
     </div>
   );

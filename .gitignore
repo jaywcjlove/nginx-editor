@@ -1,4 +1,5 @@
-lib
+cjs
+esm
 build
 node_modules
 npm-debug.log*

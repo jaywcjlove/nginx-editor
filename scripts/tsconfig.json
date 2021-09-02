@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "ESNext",
+    "module": "CommonJS",
     "target": "ESNext",
     "esModuleInterop": true,
     "declaration": true,
@@ -8,10 +8,14 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "strict": false,
+    "composite": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
     "outDir": "libs",
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["es2020"],
     "baseUrl": "."
   }
 }

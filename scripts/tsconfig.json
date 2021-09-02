@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "ESNext",
+    "target": "ESNext",
     "esModuleInterop": true,
     "declaration": true,
-    "target": "ES2017",
     "noImplicitAny": true,
     "resolveJsonModule": true,
     "moduleResolution": "node",

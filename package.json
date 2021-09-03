@@ -52,7 +52,7 @@
     "cheerio": "1.0.0-rc.10",
     "compile-less-cli": "1.8.8",
     "domhandler": "4.2.2",
-    "node-fetch": "3.0.0-beta.9",
+    "node-fetch": "3.0.0",
     "husky": "7.0.2",
     "kkt": "6.11.0",
     "lint-staged": "11.1.2",

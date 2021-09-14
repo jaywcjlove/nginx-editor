@@ -1,3 +1,4 @@
+// @ts-ignore
 import fetch from 'node-fetch';
 import cheerio from 'cheerio';
 import { Element } from 'domhandler';
@@ -27,7 +28,7 @@ const turndownService = new TurndownService({
 
 async function request(url: string): Promise<string | undefined> {
   try {
-    const data = await fetch(url).then((res) => res.buffer());
+    const data = await fetch(url).then((res: any) => res.buffer());
     return data.toString();
   } catch (error) {
     console.log('ERR:REQUEST:', error);

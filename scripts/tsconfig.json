@@ -15,7 +15,6 @@
     "outDir": "libs",
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["es2020"],
     "baseUrl": "."
   }
 }

@@ -6,7 +6,7 @@
     "main.js": "/nginx-editor/static/js/main.39c1b564.chunk.js",
     "runtime-main.js": "/nginx-editor/static/js/runtime-main.a0ea3b3e.js",
     "static/css/4.a2a4828f.chunk.css": "/nginx-editor/static/css/4.a2a4828f.chunk.css",
-    "static/js/4.518f69ef.chunk.js": "/nginx-editor/static/js/4.518f69ef.chunk.js",
+    "static/js/4.6b5d8b96.chunk.js": "/nginx-editor/static/js/4.6b5d8b96.chunk.js",
     "static/js/5.5f37b865.chunk.js": "/nginx-editor/static/js/5.5f37b865.chunk.js",
     "static/js/6.2398c345.chunk.js": "/nginx-editor/static/js/6.2398c345.chunk.js",
     "static/js/7.414a2923.chunk.js": "/nginx-editor/static/js/7.414a2923.chunk.js",
@@ -84,14 +84,14 @@
     "static/js/79.9e371062.chunk.js": "/nginx-editor/static/js/79.9e371062.chunk.js",
     "editor.worker.js": "/nginx-editor/editor.worker.js",
     "index.html": "/nginx-editor/index.html",
-    "static/js/4.518f69ef.chunk.js.LICENSE.txt": "/nginx-editor/static/js/4.518f69ef.chunk.js.LICENSE.txt",
+    "static/js/4.6b5d8b96.chunk.js.LICENSE.txt": "/nginx-editor/static/js/4.6b5d8b96.chunk.js.LICENSE.txt",
     "static/js/72.d84f5d39.chunk.js.LICENSE.txt": "/nginx-editor/static/js/72.d84f5d39.chunk.js.LICENSE.txt",
     "static/media/codicon.css": "/nginx-editor/static/media/codicon.10273201.ttf"
   },
   "entrypoints": [
     "static/js/runtime-main.a0ea3b3e.js",
     "static/css/4.a2a4828f.chunk.css",
-    "static/js/4.518f69ef.chunk.js",
+    "static/js/4.6b5d8b96.chunk.js",
     "static/css/main.c8f80e0a.chunk.css",
     "static/js/main.39c1b564.chunk.js"
   ]

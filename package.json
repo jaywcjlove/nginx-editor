@@ -54,7 +54,7 @@
     "node-fetch": "2.6.2",
     "husky": "7.0.2",
     "kkt": "6.11.0",
-    "lint-staged": "11.1.2",
+    "lint-staged": "11.2.4",
     "monaco-editor-webpack-plugin": "4.2.0",
     "prettier": "2.4.1",
     "pretty-quick": "3.1.1",

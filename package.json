@@ -55,7 +55,7 @@
     "husky": "7.0.2",
     "kkt": "6.11.0",
     "lint-staged": "11.1.2",
-    "monaco-editor-webpack-plugin": "4.2.0",
+    "monaco-editor-webpack-plugin": "7.0.1",
     "prettier": "2.4.1",
     "pretty-quick": "3.1.1",
     "react": "17.0.2",

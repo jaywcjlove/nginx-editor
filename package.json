@@ -49,7 +49,7 @@
     "@types/react": "17.0.24",
     "@types/react-dom": "17.0.9",
     "cheerio": "1.0.0-rc.10",
-    "compile-less-cli": "1.8.8",
+    "compile-less-cli": "1.8.11",
     "domhandler": "4.2.2",
     "node-fetch": "2.6.2",
     "husky": "7.0.2",

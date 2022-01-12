@@ -22,11 +22,33 @@ export default (conf: WebpackConfiguration, env: 'production' | 'development', o
   );
   conf.plugins!.push(
     new MonacoWebpackPlugin({
-      languages: [],
+      languages: ['json'],
     }),
   );
   if (env === 'production') {
     conf.output = { ...conf.output, publicPath: './' };
+    conf.optimization = {
+      ...conf.optimization,
+      splitChunks: {
+        cacheGroups: {
+          reactvendor: {
+            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+            name: 'react-vendor',
+            chunks: 'all',
+          },
+          monacoeditor: {
+            test: /[\\/]node_modules[\\/](monaco-editor)[\\/]/,
+            name: 'monaco-editor-vendor',
+            chunks: 'all',
+          },
+          codemirror: {
+            test: /[\\/]node_modules[\\/](@codemirror)[\\/]/,
+            name: 'codemirror-vendor',
+            chunks: 'all',
+          },
+        },
+      },
+    };
   }
   return conf;
 };

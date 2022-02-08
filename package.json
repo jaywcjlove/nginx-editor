@@ -43,7 +43,7 @@
   ],
   "devDependencies": {
     "@kkt/less-modules": "7.0.5",
-    "@kkt/raw-modules": "7.0.5",
+    "@kkt/raw-modules": "7.1.0",
     "@kkt/scope-plugin-options": "7.0.5",
     "@uiw/react-monacoeditor": "3.4.7",
     "@types/turndown": "5.0.1",

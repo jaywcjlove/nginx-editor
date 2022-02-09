@@ -96,6 +96,15 @@ Your app is ready to be deployed!
 - [@uiw/react-md-editor](https://github.com/uiwjs/react-md-editor): A simple markdown editor with preview, implemented with React.js and TypeScript.
 - [@uiw/react-markdown-preview](https://github.com/jaywcjlove/react-monacoeditor): React component preview markdown text in web browser. 
 
+## Contributors
+
+As always, thanks to our amazing contributors!
+
+<a href="https://github.com/jaywcjlove/nginx-editor/graphs/contributors">
+  <img src="https://jaywcjlove.github.io/nginx-editor/CONTRIBUTORS.svg" />
+</a>
+
+Made with [github-action-contributors](https://github.com/jaywcjlove/github-action-contributors).
 ## License
 
 Licensed under the MIT License.

@@ -1,27 +1,29 @@
 {
   "files": {
     "main.css": "/nginx-editor/static/css/main.8064d5e0.css",
-    "main.js": "/nginx-editor/static/js/main.7327f1da.js",
-    "static/js/413.1ff787a5.chunk.js": "/nginx-editor/static/js/413.1ff787a5.chunk.js",
-    "monaco-editor-vendor.css": "/nginx-editor/static/css/monaco-editor-vendor.638e3b43.css",
-    "monaco-editor-vendor.js": "/nginx-editor/static/js/monaco-editor-vendor.b58a1181.js",
+    "main.js": "/nginx-editor/static/js/main.813d5c2e.js",
+    "static/js/413.e32e8f2b.chunk.js": "/nginx-editor/static/js/413.e32e8f2b.chunk.js",
+    "static/js/152.b159ed2b.chunk.js": "/nginx-editor/static/js/152.b159ed2b.chunk.js",
+    "monaco-editor-vendor.css": "/nginx-editor/static/css/monaco-editor-vendor.f7091e13.css",
+    "monaco-editor-vendor.js": "/nginx-editor/static/js/monaco-editor-vendor.65185ea6.js",
     "react-vendor.js": "/nginx-editor/static/js/react-vendor.6141e87b.js",
     "json.worker.js": "/nginx-editor/json.worker.js",
     "editor.worker.js": "/nginx-editor/editor.worker.js",
-    "static/media/codicon.ttf": "/nginx-editor/static/media/codicon.56dba998166ea5a0ca7f.ttf",
+    "static/media/codicon.ttf": "/nginx-editor/static/media/codicon.f1fd2824f6c602ce2f26.ttf",
     "index.html": "/nginx-editor/index.html",
     "main.8064d5e0.css.map": "/nginx-editor/static/css/main.8064d5e0.css.map",
-    "main.7327f1da.js.map": "/nginx-editor/static/js/main.7327f1da.js.map",
-    "413.1ff787a5.chunk.js.map": "/nginx-editor/static/js/413.1ff787a5.chunk.js.map",
-    "monaco-editor-vendor.638e3b43.css.map": "/nginx-editor/static/css/monaco-editor-vendor.638e3b43.css.map",
-    "monaco-editor-vendor.b58a1181.js.map": "/nginx-editor/static/js/monaco-editor-vendor.b58a1181.js.map",
+    "main.813d5c2e.js.map": "/nginx-editor/static/js/main.813d5c2e.js.map",
+    "413.e32e8f2b.chunk.js.map": "/nginx-editor/static/js/413.e32e8f2b.chunk.js.map",
+    "152.b159ed2b.chunk.js.map": "/nginx-editor/static/js/152.b159ed2b.chunk.js.map",
+    "monaco-editor-vendor.f7091e13.css.map": "/nginx-editor/static/css/monaco-editor-vendor.f7091e13.css.map",
+    "monaco-editor-vendor.65185ea6.js.map": "/nginx-editor/static/js/monaco-editor-vendor.65185ea6.js.map",
     "react-vendor.6141e87b.js.map": "/nginx-editor/static/js/react-vendor.6141e87b.js.map"
   },
   "entrypoints": [
-    "static/css/monaco-editor-vendor.638e3b43.css",
-    "static/js/monaco-editor-vendor.b58a1181.js",
+    "static/css/monaco-editor-vendor.f7091e13.css",
+    "static/js/monaco-editor-vendor.65185ea6.js",
     "static/js/react-vendor.6141e87b.js",
     "static/css/main.8064d5e0.css",
-    "static/js/main.7327f1da.js"
+    "static/js/main.813d5c2e.js"
   ]
 }

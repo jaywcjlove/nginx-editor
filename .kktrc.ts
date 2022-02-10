@@ -30,20 +30,20 @@ export default (conf: WebpackConfiguration, env: 'production' | 'development', o
     conf.optimization = {
       ...conf.optimization,
       splitChunks: {
+        automaticNameDelimiter: '.',
+        maxSize: 500000,
+        minSize: 100000,
         cacheGroups: {
           reactvendor: {
             test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
             name: 'react-vendor',
+            reuseExistingChunk: true,
             chunks: 'all',
+            priority: -10,
           },
           monacoeditor: {
             test: /[\\/]node_modules[\\/](monaco-editor)[\\/]/,
             name: 'monaco-editor-vendor',
-            chunks: 'all',
-          },
-          codemirror: {
-            test: /[\\/]node_modules[\\/](@codemirror)[\\/]/,
-            name: 'codemirror-vendor',
             chunks: 'all',
           },
         },

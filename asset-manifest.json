@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/nginx-editor/static/css/main.8064d5e0.css",
-    "main.js": "/nginx-editor/static/js/main.813d5c2e.js",
+    "main.js": "/nginx-editor/static/js/main.557001cb.js",
     "static/js/413.e32e8f2b.chunk.js": "/nginx-editor/static/js/413.e32e8f2b.chunk.js",
     "static/js/152.b159ed2b.chunk.js": "/nginx-editor/static/js/152.b159ed2b.chunk.js",
     "monaco-editor-vendor.css": "/nginx-editor/static/css/monaco-editor-vendor.f7091e13.css",
@@ -12,7 +12,7 @@
     "static/media/codicon.ttf": "/nginx-editor/static/media/codicon.f1fd2824f6c602ce2f26.ttf",
     "index.html": "/nginx-editor/index.html",
     "main.8064d5e0.css.map": "/nginx-editor/static/css/main.8064d5e0.css.map",
-    "main.813d5c2e.js.map": "/nginx-editor/static/js/main.813d5c2e.js.map",
+    "main.557001cb.js.map": "/nginx-editor/static/js/main.557001cb.js.map",
     "413.e32e8f2b.chunk.js.map": "/nginx-editor/static/js/413.e32e8f2b.chunk.js.map",
     "152.b159ed2b.chunk.js.map": "/nginx-editor/static/js/152.b159ed2b.chunk.js.map",
     "monaco-editor-vendor.f7091e13.css.map": "/nginx-editor/static/css/monaco-editor-vendor.f7091e13.css.map",
@@ -24,6 +24,6 @@
     "static/js/monaco-editor-vendor.65185ea6.js",
     "static/js/react-vendor.6141e87b.js",
     "static/css/main.8064d5e0.css",
-    "static/js/main.813d5c2e.js"
+    "static/js/main.557001cb.js"
   ]
 }

@@ -48,7 +48,7 @@
     "@uiw/react-monacoeditor": "3.5.2",
     "@types/turndown": "5.0.1",
     "@types/react": "17.0.39",
-    "@types/react-dom": "17.0.11",
+    "@types/react-dom": "17.0.13",
     "cheerio": "1.0.0-rc.10",
     "compile-less-cli": "1.8.11",
     "domhandler": "4.3.0",

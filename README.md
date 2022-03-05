@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/jaywcjlove/nginx-editor/actions">
-    <img alt="Build & Deploy" src="https://github.com/jaywcjlove/nginx-editor/workflows/Build%20&%20Deploy/badge.svg">
+  <a href="https://github.com/jaywcjlove/nginx-editor/actions/workflows/ci.yml">
+    <img alt="Build & Deploy" src="https://github.com/jaywcjlove/nginx-editor/actions/workflows/ci.yml/badge.svg">
   </a>
   <a href="https://github.com/jaywcjlove/nginx-editor/issues">
     <img alt="Issues" src="https://img.shields.io/github/issues/jaywcjlove/nginx-editor.svg">

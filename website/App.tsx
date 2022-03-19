@@ -6,6 +6,7 @@ import './App.css';
 import '../';
 
 const App: React.FC = () => {
+  const [theme, setTheme] = useState(document.documentElement.dataset.colorMode === 'dark' || !document.documentElement.dataset.colorMode ? 'vs-dark' : 'vs');
   const [content, setContent] = useState(nginxStr || '');
   const [contentDownload, setContentDownload] = useState(content || nginxStr || '');
   const editor = useRef<RefEditorInstance>(null);
@@ -21,6 +22,10 @@ const App: React.FC = () => {
     if (editor.current && window) {
       window.addEventListener('resize', resizeHandle, false);
     }
+    setTheme(document.documentElement.dataset.colorMode === 'dark' ? 'vs-dark' : 'vs');
+    document.addEventListener('colorschemechange', (e) => {
+      setTheme(e.detail.colorScheme === 'dark' ? 'vs-dark' : 'vs');
+    });
     return () => {
       window && window.removeEventListener('resize', resizeHandle, false);
     };
@@ -38,7 +43,9 @@ const App: React.FC = () => {
         onChange={(value) => {
           setContentDownload(value);
         }}
-        theme="nginx-theme"
+        options={{
+          theme,
+        }}
         language="nginx"
         value={content}
         height="calc(100vh - 36px)"

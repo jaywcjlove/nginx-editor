@@ -1,7 +1,8 @@
 .button {
   border: 0;
   background-color: transparent !important;
-  color: #b9b9b9;
+  // color: #b9b9b9;
+  color: var(--color-theme-text);
   padding: 2px 5px;
   transition: background-color 0.3s;
   cursor: pointer;
@@ -10,7 +11,7 @@
     outline: 0;
   }
   &:hover {
-    background-color: #00000094 !important;
+    background-color: var(--color-theme-hover-text) !important;
   }
   + .button {
     margin-right: 3px;

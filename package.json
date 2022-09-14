@@ -47,7 +47,7 @@
     "@kkt/scope-plugin-options": "~7.1.1",
     "@uiw/react-monacoeditor": "~3.5.3",
     "@types/turndown": "~5.0.1",
-    "@types/react": "~17.0.39",
+    "@types/react": "~18.0.20",
     "@types/react-dom": "~17.0.13",
     "@wcj/dark-mode": "^1.0.13",
     "cheerio": "~1.0.0-rc.10",

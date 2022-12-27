@@ -70,6 +70,10 @@ jobs:
           ${{ steps.changelog.outputs.changelog }}
 
     - run: npm run get:nginx
+    - name: Modify package.json
+      uses: jaywcjlove/github-action-package@main
+      with:
+        unset: scripts,devDependencies,eslintConfig,browserslist
 
     - run: npm publish
       continue-on-error: true

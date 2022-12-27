@@ -69,3 +69,8 @@ jobs:
           ${{ steps.changelog.outputs.changelog }}
 
     - run: npm run get:nginx
+
+    - run: npm publish
+      continue-on-error: true
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

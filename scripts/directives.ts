@@ -1,7 +1,6 @@
 // @ts-ignore
 import fetch from 'node-fetch';
-import cheerio from 'cheerio';
-import { Element } from 'domhandler';
+import * as cheerio from 'cheerio';
 import fs from 'fs';
 import path from 'path';
 import TurndownService from 'turndown';
@@ -36,11 +35,11 @@ async function request(url: string): Promise<string | undefined> {
   }
 }
 
-function nextSibling(child: Element, opt: { tagName: string; class?: string }) {
+function nextSibling(child: cheerio.Element, opt: { tagName: string; class?: string }) {
   let nextNode = child;
   let result = undefined;
   do {
-    nextNode = nextNode.nextSibling as Element;
+    nextNode = nextNode.nextSibling as cheerio.Element;
     if (
       nextNode &&
       nextNode.name &&
@@ -70,7 +69,7 @@ async function getData(url: string) {
         n: '',
         d: [],
       };
-      let variablesElm: Element = undefined;
+      let variablesElm: cheerio.Element = undefined;
       childs.each((idx, child) => {
         if (child.attribs.name && child.tagName === 'a') {
           result.push({ ...resultItem });

@@ -6,7 +6,11 @@ import './App.css';
 import '../';
 
 const App: React.FC = () => {
-  const [theme, setTheme] = useState(document.documentElement.dataset.colorMode === 'dark' || !document.documentElement.dataset.colorMode ? 'vs-dark' : 'vs');
+  const [theme, setTheme] = useState(
+    document.documentElement.dataset.colorMode === 'dark' || !document.documentElement.dataset.colorMode
+      ? 'vs-dark'
+      : 'vs',
+  );
   const [content, setContent] = useState(nginxStr || '');
   const [contentDownload, setContentDownload] = useState(content || nginxStr || '');
   const editor = useRef<RefEditorInstance>(null);
@@ -40,6 +44,7 @@ const App: React.FC = () => {
       />
       <MonacoEditor
         ref={editor}
+        theme="nginx-theme"
         onChange={(value) => {
           setContentDownload(value);
         }}

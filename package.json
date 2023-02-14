@@ -42,7 +42,7 @@
     "monaco-editor-nginx"
   ],
   "devDependencies": {
-    "@kkt/less-modules": "~7.3.2",
+    "@kkt/less-modules": "~7.4.1",
     "@kkt/raw-modules": "~7.3.2",
     "@kkt/scope-plugin-options": "~7.3.2",
     "@uiw/react-monacoeditor": "~3.5.7",

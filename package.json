@@ -55,7 +55,7 @@
     "domhandler": "~4.3.0",
     "node-fetch": "~2.6.2",
     "husky": "~8.0.2",
-    "kkt": "~7.3.2",
+    "kkt": "~7.4.2",
     "lint-staged": "~13.1.0",
     "monaco-editor-webpack-plugin": "~7.0.1",
     "prettier": "~2.8.1",

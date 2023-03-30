@@ -1,7 +1,7 @@
-// @ts-ignore
-import fetch from 'node-fetch';
-import * as cheerio from 'cheerio';
+import  { CheerioAPI, Element } from 'cheerio';
 import fs from 'fs';
+import https from 'https';
+import { parse } from 'url';
 import path from 'path';
 import TurndownService from 'turndown';
 
@@ -26,20 +26,31 @@ const turndownService = new TurndownService({
 });
 
 async function request(url: string): Promise<string | undefined> {
-  try {
-    const data = await fetch(url).then((res: any) => res.buffer());
-    return data.toString();
-  } catch (error) {
-    console.log('ERR:REQUEST:', error);
-    process.exitCode = 1;
-  }
+  let responseData = '';
+  return new Promise((resolve, reject) => {
+    const myURL = parse(url);
+    const req = https.request(
+      {
+        hostname: myURL.hostname,
+        path: myURL.path,
+        method: 'GET',
+      },
+      (res) => {
+        res.on('data', (data) => (responseData += data.toString()));
+        res.on('end', () => resolve(responseData));
+        res.on('error', (error) => reject(error));
+      },
+    );
+    req.on('error', (error) => reject(error));
+    req.end();
+  });
 }
 
-function nextSibling(child: cheerio.Element, opt: { tagName: string; class?: string }) {
+function nextSibling(child: Element, opt: { tagName: string; class?: string }) {
   let nextNode = child;
   let result = undefined;
   do {
-    nextNode = nextNode.nextSibling as cheerio.Element;
+    nextNode = nextNode.nextSibling as Element;
     if (
       nextNode &&
       nextNode.name &&
@@ -52,14 +63,55 @@ function nextSibling(child: cheerio.Element, opt: { tagName: string; class?: str
   return result;
 }
 
+function getVariablesCompactElement(child: Element, $: CheerioAPI): Element {
+  let nextNode = child;
+  let result = null;
+  do {
+    nextNode = nextNode?.next as Element;
+    if (nextNode?.tagName === 'dl' && nextNode?.attribs?.class === 'compact') {
+      result = nextNode;
+      nextNode = null;
+    }
+  } while (!!nextNode);
+  return result;
+}
+
+function getSyntaxElement(child: Element, $: CheerioAPI) {
+  let nextNode = child;
+  let syntax = '';
+  let defaultValue = '';
+  let context = '';
+  const detail: string[] = [];
+  do {
+    nextNode = nextNode?.nextSibling as Element;
+    if (nextNode?.tagName === 'a') {
+      nextNode = null;
+    }
+    if (nextNode && nextNode.attribs?.class === 'directive') {
+      const tr = $(nextNode).find('table tr');
+      syntax = turndownService.turndown($('td', tr[0]).html());
+      defaultValue = turndownService.turndown($('td', tr[1]).html());
+      context = turndownService.turndown($('td', tr[2]).html());
+    } else if (nextNode) {
+      const html = $(nextNode).html();
+      if (html && nextNode.attribs?.class === 'example') {
+        detail.push(`\`\`\`\n${$(nextNode).text() || ''}\n\`\`\``);
+      } else if (html) {
+        detail.push(turndownService.turndown(html || ''));
+      }
+    }
+  } while (!!nextNode);
+  return { syntax, defaultValue, context, detail };
+}
+
 async function getData(url: string) {
   console.log(`\x1b[1;35m Request URL:\x1b[0m =>\x1b[34m ${url} \x1b[0m`);
   try {
     const data = await request(url);
     if (data) {
-      const $ = cheerio.load(data);
-      const childs = $('#content').children();
-      const module = childs
+      const $ = load(data);
+      const children = $('#content').children();
+      const module = children
         .first()
         .text()
         .replace(/^Module /g, '');
@@ -69,47 +121,36 @@ async function getData(url: string) {
         n: '',
         d: [],
       };
-      let variablesElm: cheerio.Element = undefined;
-      childs.each((idx, child) => {
-        if (child.attribs.name && child.tagName === 'a') {
-          result.push({ ...resultItem });
-          resultItem.n = child.attribs.name;
-          resultItem.d = [];
-          if (child.attribs.name === 'variables') {
-            variablesElm = nextSibling(child, { tagName: 'dl', class: 'compact' });
-          }
-        }
-        if (child.attribs.class === 'directive') {
-          const tr = $(child).find('table tr');
-          resultItem.s = turndownService.turndown($('td', tr[0]).html());
-          resultItem.v = turndownService.turndown($('td', tr[1]).html());
-          resultItem.c = turndownService.turndown($('td', tr[2]).html());
-        }
-        const text = $(child).html();
-        if (text && text !== '') {
-          if (/directive/.test(child.attribs.class)) return;
-          if (child.attribs.class === 'example') {
-            resultItem.d.push(`\`\`\`\n${$(child).text() || ''}\n\`\`\``);
-          } else {
-            resultItem.d.push(turndownService.turndown(text || ''));
-          }
-        }
-        if (idx + 1 === childs.length) {
-          result.push({ ...resultItem });
+      let variables: Element;
+      children.each((_, child) => {
+        const data: DataItem = { ...resultItem };
+        if (
+          child.attribs?.name &&
+          child.tagName === 'a' &&
+          !/^(directives|example|variables|summary)/.test(child.attribs?.name)
+        ) {
+          data.n = child.attribs.name;
+          const { syntax, defaultValue, context, detail } = getSyntaxElement(child, $);
+          data.s = syntax;
+          data.v = defaultValue;
+          data.c = context;
+          data.d = detail.filter(Boolean);
+          result.push(data);
+        } else if (child.attribs?.name === 'variables' && child.tagName === 'a') {
+          const compact = getVariablesCompactElement(child, $);
+          variables = $(compact).children();
+          variables.each((_, compactChild) => {
+            if (compactChild.tagName === 'dt' && compactChild.attribs.id) {
+              result.push({
+                m: module,
+                n: $(compactChild).text(),
+                d: [turndownService.turndown($(nextSibling(compactChild, { tagName: 'dd' })).html())],
+              });
+            }
+          });
         }
       });
-      $(variablesElm)
-        .children()
-        .each((_, child) => {
-          if (child.tagName === 'dt' && child.attribs.id) {
-            result.push({
-              m: module,
-              n: $(child).text(),
-              d: [turndownService.turndown($(nextSibling(child, { tagName: 'dd' })).html())],
-            });
-          }
-        });
-      const directivesData: ResultDataItem[] = result
+      const directivesData: ResultDataItem[] = [...result]
         .map((item) => {
           const data: ResultDataItem = { m: item.m, n: item.n, d: item.d.join('\n') };
           if (item.v && item.v.replace(/^—+/g, '')) {
@@ -133,9 +174,7 @@ async function getData(url: string) {
         })
         .filter((m) => m.n && !/^(directives|example|summary)/.test(m.n));
       console.log(`\x1b[35m  ->\x1b[0m Data Length:\x1b[32m ${directivesData.length} \x1b[0m`);
-      console.log(
-        `\x1b[35m  ->\x1b[0m Find Variables Node:\x1b[36m ${variablesElm ? $(variablesElm).length : 0} \x1b[0m`,
-      );
+      console.log(`\x1b[35m  ->\x1b[0m Find Variables Node:\x1b[36m ${variables ? $(variables).length : 0} \x1b[0m`);
       return directivesData;
     }
     return [];

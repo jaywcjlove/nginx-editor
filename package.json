@@ -65,7 +65,7 @@
     "source-map-explorer": "~2.5.3",
     "turndown": "~7.1.1",
     "ts-node": "~10.9.1",
-    "tsbb": "~3.7.9"
+    "tsbb": "~4.1.0"
   },
   "eslintConfig": {
     "extends": [

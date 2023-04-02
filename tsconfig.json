@@ -18,5 +18,5 @@
     "noFallthroughCasesInSwitch": true,
     "noEmit": true
   },
-  "include": ["website", "scripts", ".kktrc.ts"]
+  "include": ["src/*"]
 }

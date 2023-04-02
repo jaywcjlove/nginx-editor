@@ -7,12 +7,12 @@ import directives from './directives.json';
 monaco.languages.register({
   id: 'nginx',
 });
-monaco.languages.setLanguageConfiguration('nginx', {
-  autoClosingPairs: [
-    { open: '{', close: '}' },
-    { open: '"', close: '"' },
-  ],
-});
+// monaco.languages.setLanguageConfiguration('nginx', {
+//   autoClosingPairs: [
+//     { open: '{', close: '}' },
+//     { open: '"', close: '"' },
+//   ],
+// });
 monaco.languages.setMonarchTokensProvider('nginx', tokenConf);
 monaco.editor.defineTheme('nginx-theme', themeConfig);
 

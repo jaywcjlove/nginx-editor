@@ -1,4 +1,4 @@
-import  { CheerioAPI, Element } from 'cheerio';
+import { load, CheerioAPI, Cheerio, Element } from 'cheerio';
 import fs from 'fs';
 import https from 'https';
 import { parse } from 'url';
@@ -121,7 +121,7 @@ async function getData(url: string) {
         n: '',
         d: [],
       };
-      let variables: Element;
+      let variables: Cheerio<Element>;
       children.each((_, child) => {
         const data: DataItem = { ...resultItem };
         if (

@@ -1,6 +1,6 @@
 {
   "name": "monaco-editor-nginx",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Nginx language for Monaco Editor.",
   "main": "cjs/index.js",
   "module": "esm/index.js",

@@ -1,5 +1,5 @@
 import * as monaco from 'monaco-editor';
-import { themeConfig, tokenConf } from './conf';
+import { themeConfig, themeDarkConfig, tokenConf } from './conf';
 import suggestions from './suggestions';
 import directives from './directives.json';
 
@@ -15,6 +15,7 @@ monaco.languages.register({
 // });
 monaco.languages.setMonarchTokensProvider('nginx', tokenConf);
 monaco.editor.defineTheme('nginx-theme', themeConfig);
+monaco.editor.defineTheme('nginx-theme-dark', themeDarkConfig);
 
 monaco.languages.registerCompletionItemProvider('nginx', {
   provideCompletionItems: (model: monaco.editor.ITextModel, position: monaco.Position) => {

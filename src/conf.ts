@@ -70,6 +70,73 @@ export const themeConfig: monaco.editor.IStandaloneThemeData = {
   colors: {
     // 'attribute.value.unit': '#68217a'
   },
+  // base: 'vs-dark',
+  base: 'vs',
+  inherit: true,
+  rules: [
+    {
+      token: 'module.http',
+      foreground: '#007c7c',
+    },
+    {
+      token: 'module.events',
+      foreground: '#007c7c',
+    },
+    {
+      token: 'http.headers',
+      foreground: '#5400d7',
+    },
+    {
+      token: 'http.proxy',
+      foreground: '#00a039',
+    },
+    {
+      token: 'module.main',
+      foreground: '#c408ff',
+      fontStyle: 'bold',
+    },
+    {
+      token: 'module.log',
+      foreground: '#4d6aab',
+    },
+    {
+      token: 'module.http.addition',
+      foreground: '#c408ff',
+    },
+    {
+      token: 'keywords',
+      foreground: '#9effff',
+      fontStyle: 'bold',
+    },
+    {
+      token: 'http.upstream',
+      foreground: '#0078d0',
+      fontStyle: 'bold',
+    },
+    {
+      token: 'identifier',
+      foreground: '#8e44ad',
+    },
+    {
+      token: 'delimiter.bracket',
+      foreground: '#737373',
+    },
+    {
+      token: 'delimiter',
+      foreground: '#737373',
+    },
+    {
+      token: 'comment',
+      foreground: '#b6b6b6',
+    },
+  ],
+};
+
+export const themeDarkConfig: monaco.editor.IStandaloneThemeData = {
+  colors: {
+    // 'attribute.value.unit': '#68217a'
+  },
+  // base: 'vs-dark',
   base: 'vs-dark',
   inherit: true,
   rules: [

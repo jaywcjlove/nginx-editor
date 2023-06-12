@@ -43,13 +43,14 @@ import MonacoEditor from '@uiw/react-monacoeditor';
 import 'monaco-editor-nginx';
 
 <MonacoEditor
-  theme="nginx-theme"
-  language="nginx"
-  value={nginxStr}
-  height="100vh"
-  options={{
-    theme: 'vs-dark',
+  ref={editor}
+  theme={theme === 'vs-dark' ? 'nginx-theme-dark' : 'nginx-theme'}
+  onChange={(value) => {
+    setContentDownload(value);
   }}
+  language="nginx"
+  value={content}
+  height="calc(100vh - 36px)"
 />
 ```
 

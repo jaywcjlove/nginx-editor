@@ -44,12 +44,9 @@ const App: React.FC = () => {
       />
       <MonacoEditor
         ref={editor}
-        theme="nginx-theme"
+        theme={theme === 'vs-dark' ? 'nginx-theme-dark' : 'nginx-theme'}
         onChange={(value) => {
           setContentDownload(value);
-        }}
-        options={{
-          theme,
         }}
         language="nginx"
         value={content}

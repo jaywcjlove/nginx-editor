@@ -51,7 +51,7 @@
     "@types/react-dom": "^18.0.11",
     "@wcj/dark-mode": "^1.0.13",
     "cheerio": "~1.0.0-rc.10",
-    "compile-less-cli": "~1.8.11",
+    "compile-less-cli": "~1.9.0",
     "husky": "^8.0.3",
     "kkt": "^7.4.9",
     "lint-staged": "^13.2.0",

@@ -54,7 +54,7 @@
     "compile-less-cli": "~1.9.0",
     "husky": "^8.0.3",
     "kkt": "^7.4.9",
-    "lint-staged": "^13.2.0",
+    "lint-staged": "^14.0.1",
     "monaco-editor-webpack-plugin": "~7.0.1",
     "prettier": "~2.8.1",
     "pretty-quick": "~3.1.3",

@@ -5,6 +5,7 @@
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "homepage": "https://jaywcjlove.github.io/nginx-editor",
+  "funding": "https://jaywcjlove.github.io/#/sponsor",
   "scripts": {
     "prepare": "npm run build",
     "doc": "kkt build --app-src ./website",

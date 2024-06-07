@@ -1,5 +1,5 @@
 import * as monaco from 'monaco-editor';
-import directives from './directives.json';
+import { directives } from './directives';
 
 function getDirectives(range: monaco.IRange) {
   return directives.map((item) => ({

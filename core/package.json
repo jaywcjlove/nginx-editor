@@ -1,6 +1,6 @@
 {
   "name": "monaco-editor-nginx",
-  "version": "1.0.16",
+  "version": "2.0.0",
   "description": "Nginx language for Monaco Editor.",
   "main": "cjs/index.js",
   "module": "esm/index.js",
@@ -13,8 +13,8 @@
   "author": "",
   "license": "MIT",
   "peerDependencies": {
-    "@nginx/reference-lib": ">=1.0.14",
     "@babel/runtime": ">=7.10.0",
+    "@nginx/reference-lib": ">=1.0.14",
     "monaco-editor": ">=0.22.3",
     "react": ">=16.9.0",
     "react-dom": ">=16.9.0"

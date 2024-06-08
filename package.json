@@ -8,9 +8,9 @@
     "⬆️⬆️⬆️⬆️⬆️ package ⬆️⬆️⬆️⬆️⬆️": "▲▲▲▲▲ package ▲▲▲▲▲",
     "start": "lerna exec --scope website -- npm run start",
     "doc": "lerna exec --scope website -- npm run build",
-    "get:nginx": "ts-node --project scripts/tsconfig.json scripts/directives.ts",
+    "version": "lerna version --exact --force-publish --no-push --no-git-tag-version",
     "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\"",
-    "map": "source-map-explorer build/static/js/*.js --html website/build/website-result.html"
+    "map": "source-map-explorer website/build/static/js/*.js --html website/build/website-result.html"
   },
   "devDependencies": {
     "@types/turndown": "~5.0.1",

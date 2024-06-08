@@ -1,7 +1,7 @@
 import * as monaco from 'monaco-editor';
 import { themeConfig, themeDarkConfig, tokenConf } from './conf';
 import suggestions from './suggestions';
-import directives from './directives.json';
+import { directives } from './directives';
 
 // Register a new language
 monaco.languages.register({

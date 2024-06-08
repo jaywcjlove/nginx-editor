@@ -75,6 +75,7 @@ monaco.editor.create(document.getElementById("container"), {
 Runs the project in development mode.  
 
 ```bash
+yarn install #
 # Step 1, run first, listen to the component compile and output the .js file
 # listen for compilation output type .d.ts file
 npm run watch

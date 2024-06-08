@@ -4,9 +4,7 @@ import suggestions from './suggestions';
 import { directives } from './directives';
 
 // Register a new language
-monaco.languages.register({
-  id: 'nginx',
-});
+monaco.languages.register({ id: 'nginx' });
 // monaco.languages.setLanguageConfiguration('nginx', {
 //   autoClosingPairs: [
 //     { open: '{', close: '}' },

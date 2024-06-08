@@ -2,7 +2,9 @@ import { useState } from 'react';
 import '@wcj/dark-mode';
 import styles from 'Header.module.less';
 import LoadFile, { LoadFileProps } from './LoadFile';
+// @ts-ignore
 import { ReactComponent } from './github.svg';
+// @ts-ignore
 import { ReactComponent as NginxLogo } from './nginx.svg';
 
 type HeaderProps = LoadFileProps & {};

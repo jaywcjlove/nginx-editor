@@ -31,7 +31,7 @@ export default function LoadFile(props: LoadFileProps) {
   }, []);
 
   function handleUpload(eve: Event) {
-    const { target } = (eve as unknown) as React.ChangeEvent<HTMLInputElement>;
+    const { target } = eve as unknown as React.ChangeEvent<HTMLInputElement>;
     if (target.files && target.files[0]) {
       fileState.current = target.files[0];
       fileReader.current.readAsText(target.files[0]);

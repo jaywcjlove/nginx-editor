@@ -1,6 +1,7 @@
-import { getDirectives, Directive, Format } from '@nginx/reference-lib';
+import { getDirectives, Format } from '@nginx/reference-lib';
+import { Directive } from '@nginx/reference-lib/dist/index.d';
 
-type autocomplete = {
+export type Autocomplete = {
   /** name of the NGINX module */
   m: string;
   /** name */
@@ -17,13 +18,13 @@ type autocomplete = {
   s: string;
 };
 
-function toAutocomplete(d: Directive): autocomplete {
-  const ret: autocomplete = {
+function toAutocomplete(d: Directive): Autocomplete {
+  const ret: Autocomplete = {
     m: d.module,
     n: d.name,
     d: d.description,
-    c: d.contexts.map((c) => '`' + c + '`').join(', '),
-    s: d.syntax.map((s) => `**${d.name}** ${s};`).join('\n'),
+    c: d.contexts.map((c: string) => '`' + c + '`').join(', '),
+    s: d.syntax.map((s: string) => `**${d.name}** ${s};`).join('\n'),
   };
 
   if (d.default) {

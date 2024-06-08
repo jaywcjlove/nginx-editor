@@ -1,0 +1,41 @@
+{
+  "name": "monaco-editor-nginx",
+  "version": "1.0.16",
+  "description": "Nginx language for Monaco Editor.",
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "homepage": "https://jaywcjlove.github.io/nginx-editor",
+  "funding": "https://jaywcjlove.github.io/#/sponsor",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaywcjlove/nginx-editor.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+    "@nginx/reference-lib": ">=1.0.14",
+    "@babel/runtime": ">=7.10.0",
+    "monaco-editor": ">=0.22.3",
+    "react": ">=16.9.0",
+    "react-dom": ">=16.9.0"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.18.6",
+    "@nginx/reference-lib": "^1.0.14",
+    "monaco-editor": "^0.44.0"
+  },
+  "files": [
+    "cjs",
+    "esm",
+    "src"
+  ],
+  "keywords": [
+    "monaco-editor",
+    "monaco-nginx",
+    "nginx",
+    "monaco",
+    "editor",
+    "editor-nginx",
+    "monaco-editor-nginx"
+  ]
+}

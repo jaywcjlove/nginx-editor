@@ -3,7 +3,8 @@ import MonacoEditor, { RefEditorInstance } from '@uiw/react-monacoeditor';
 import { nginxStr } from './nginx.conf';
 import Header from './Header';
 import './App.css';
-import '../';
+
+import 'monaco-editor-nginx';
 
 const App: React.FC = () => {
   const [theme, setTheme] = useState(

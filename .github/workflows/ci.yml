@@ -83,6 +83,7 @@ jobs:
       - run: npm publish --access public --provenance
         name: 📦 monaco-editor-nginx publish to NPM
         continue-on-error: true
+        working-directory: core
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

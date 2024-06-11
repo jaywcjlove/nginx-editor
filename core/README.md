@@ -72,10 +72,17 @@ monaco.editor.create(document.getElementById("container"), {
 
 ## Development
 
+> [!WARNING]
+> 
+> Using `npm` to install now cannot preview the example effect, but using `yarn@1` works. Currently, we are not sure what the reason is. If anyone knows, please let me know. Thanks a lot 🙏
+
+```bash
+yarn install # ⚠️ 
+```
+
 Runs the project in development mode.  
 
 ```bash
-yarn install #
 # Step 1, run first, listen to the component compile and output the .js file
 # listen for compilation output type .d.ts file
 npm run watch

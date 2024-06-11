@@ -1,5 +1,4 @@
-import { getDirectives, Format } from '@nginx/reference-lib';
-import { Directive } from '@nginx/reference-lib/dist/index.d';
+import { getDirectives, Format, getVariables, Directive } from '@nginx/reference-lib';
 
 export type Autocomplete = {
   /** name of the NGINX module */
@@ -12,10 +11,10 @@ export type Autocomplete = {
    * nginx config */
   v?: string;
   /** markdown CSV for valid contexts */
-  c: string;
+  c?: string;
   /** markdown-formatted syntax specifications, including directive name.
    * Multiple syntaxes are seperated by newlines */
-  s: string;
+  s?: string;
 };
 
 function toAutocomplete(d: Directive): Autocomplete {
@@ -34,4 +33,10 @@ function toAutocomplete(d: Directive): Autocomplete {
   return ret;
 }
 
-export const directives = getDirectives(Format.Markdown).map(toAutocomplete);
+const variables = getVariables(Format.Markdown).map((v) => ({
+  m: v.module,
+  n: v.name,
+  d: v.description,
+}));
+
+export const directives = getDirectives(Format.Markdown).map(toAutocomplete).concat(variables);

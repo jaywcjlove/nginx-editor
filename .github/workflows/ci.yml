@@ -11,10 +11,10 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
           registry-url: 'https://registry.npmjs.org'
 
       - name: Setup Yarn
@@ -80,12 +80,13 @@ jobs:
             
             ${{ steps.changelog.outputs.changelog }}
 
-      - run: npm publish --access public --provenance
+      # node@v22.0.0+ 
+      # https://github.com/orgs/community/discussions/176761
+      # https://github.com/actions/setup-node/issues/1440#issuecomment-3571890875
+      - run: NODE_AUTH_TOKEN="" npm publish --access public --provenance
         name: 📦 monaco-editor-nginx publish to NPM
-        continue-on-error: true
         working-directory: core
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        continue-on-error: true
 
       # - run: npm run get:nginx
 

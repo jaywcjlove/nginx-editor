@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.9231104f.css",
-    "main.js": "/static/js/main.c9c4eb28.js",
+    "main.js": "/static/js/main.a1ba6080.js",
     "monaco-editor-vendor.80c937b5.js": "/static/js/monaco-editor-vendor.80c937b5.9b2b562d.js",
     "react-vendor.js": "/static/js/react-vendor.dc7d968b.js",
     "monaco-editor-vendor.4936adf9.js": "/static/js/monaco-editor-vendor.4936adf9.a07a39a5.js",
@@ -39,7 +39,7 @@
     "static/media/github.svg": "/static/media/github.abeb627b2c4ddac0d726516e4c7c06c8.svg",
     "static/media/nginx.svg": "/static/media/nginx.b0803920bd9b465d7e30d788832541bf.svg",
     "main.9231104f.css.map": "/static/css/main.9231104f.css.map",
-    "main.c9c4eb28.js.map": "/static/js/main.c9c4eb28.js.map",
+    "main.a1ba6080.js.map": "/static/js/main.a1ba6080.js.map",
     "monaco-editor-vendor.80c937b5.9b2b562d.js.map": "/static/js/monaco-editor-vendor.80c937b5.9b2b562d.js.map",
     "react-vendor.dc7d968b.js.map": "/static/js/react-vendor.dc7d968b.js.map",
     "monaco-editor-vendor.4936adf9.a07a39a5.js.map": "/static/js/monaco-editor-vendor.4936adf9.a07a39a5.js.map",
@@ -103,6 +103,6 @@
     "static/js/monaco-editor-vendor.80c937b5.9b2b562d.js",
     "static/js/react-vendor.dc7d968b.js",
     "static/css/main.9231104f.css",
-    "static/js/main.c9c4eb28.js"
+    "static/js/main.a1ba6080.js"
   ]
 }
